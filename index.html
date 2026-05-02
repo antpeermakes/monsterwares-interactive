@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monster Wares — Ornery Ox Learns to Be Open</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FFF8F0;
+    --warm: #FFF0DC;
+    --ink: #2C1A0E;
+    --ink-light: #6B4226;
+    --teal: #1D9E75;
+    --teal-light: #E1F5EE;
+    --teal-mid: #5DCAA5;
+    --purple: #7F77DD;
+    --purple-light: #EEEDFE;
+    --amber: #EF9F27;
+    --amber-light: #FAEEDA;
+    --page-shadow: 0 4px 24px rgba(44,26,14,0.13);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* ── COVER SCREEN ─────────────────────────────────────────── */
+  #coverScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    background: var(--ink);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 32px;
+    text-align: center;
+    animation: fadeIn 0.5s ease;
+  }
+
+  #coverScreen.hidden { display: none; }
+
+  .cover-brand {
+    font-family: 'Fredoka One', cursive;
+    font-size: 14px;
+    color: var(--teal-mid);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+  }
+
+  .cover-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(36px, 8vw, 60px);
+    color: var(--cream);
+    line-height: 1.15;
+    margin-bottom: 8px;
+  }
+
+  .cover-title .hi { color: var(--amber); }
+
+  .cover-sub {
+    font-size: 15px;
+    color: rgba(255,248,240,0.42);
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    margin-bottom: 52px;
+  }
+
+  .cover-rule {
+    width: 44px;
+    height: 3px;
+    background: var(--teal);
+    border-radius: 2px;
+    margin: 0 auto 52px;
+  }
+
+  .start-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    height: 58px;
+    padding: 0 44px;
+    border-radius: 29px;
+    background: var(--teal);
+    border: none;
+    font-family: 'Fredoka One', cursive;
+    font-size: 21px;
+    color: white;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .start-btn:hover  { background: #0F6E56; }
+  .start-btn:active { transform: scale(0.97); }
+
+  .cover-author {
+    margin-top: 44px;
+    font-size: 13px;
+    color: rgba(255,248,240,0.32);
+    font-weight: 600;
+  }
+
+  .cover-author a {
+    color: rgba(255,248,240,0.48);
+    text-decoration: none;
+  }
+
+  .cover-author a:hover { color: var(--teal-mid); text-decoration: underline; }
+
+  /* ── COMPLETION SCREEN ────────────────────────────────────── */
+  #completionScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    background: var(--cream);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 32px;
+    text-align: center;
+    animation: fadeIn 0.5s ease;
+  }
+
+  #completionScreen.hidden { display: none; }
+
+  .cs-star {
+    width: 72px;
+    height: 72px;
+    color: var(--amber);
+    margin: 0 auto 28px;
+  }
+
+  .cs-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(30px, 6vw, 48px);
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+
+  .cs-msg {
+    font-size: 17px;
+    color: var(--ink-light);
+    max-width: 380px;
+    line-height: 1.65;
+    font-weight: 600;
+    margin-bottom: 44px;
+  }
+
+  .cs-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .buy-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 54px;
+    border-radius: 27px;
+    background: var(--amber);
+    border: none;
+    font-family: 'Fredoka One', cursive;
+    font-size: 19px;
+    color: var(--ink);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .buy-btn:hover  { background: #D68A1A; }
+  .buy-btn:active { transform: scale(0.97); }
+
+  .again-btn {
+    height: 54px;
+    border-radius: 27px;
+    background: white;
+    border: 2px solid rgba(44,26,14,0.22);
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .again-btn:hover {
+    background: var(--ink);
+    color: var(--cream);
+    border-color: var(--ink);
+  }
+
+  .cs-credit {
+    margin-top: 40px;
+    font-size: 13px;
+    color: var(--ink-light);
+  }
+
+  .cs-credit a { color: var(--teal); text-decoration: none; }
+  .cs-credit a:hover { text-decoration: underline; }
+
+  /* ── EMOTION PANEL (SCAFFOLD) ─────────────────────────────── */
+  #emotionPanel {
+    position: fixed;
+    top: 56px;
+    right: 0;
+    width: 272px;
+    height: calc(100vh - 56px);
+    background: white;
+    border-left: 1.5px solid rgba(44,26,14,0.1);
+    box-shadow: -4px 0 20px rgba(44,26,14,0.09);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 18px;
+    gap: 16px;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    visibility: hidden;
+  }
+
+  #emotionPanel.open {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .ep-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 16px;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ep-badge {
+    font-family: 'Nunito', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    background: var(--purple-light);
+    color: var(--purple);
+    padding: 2px 9px;
+    border-radius: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* TODO: replace with <video id="webcamFeed"> when implementing face-api.js */
+  .ep-camera {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: var(--warm);
+    border-radius: 12px;
+    border: 2px dashed rgba(44,26,14,0.18);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--ink-light);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .ep-camera svg { opacity: 0.35; }
+
+  /* TODO: populate with live emotion scores from face-api.js */
+  .ep-results {
+    flex: 1;
+    background: var(--cream);
+    border-radius: 10px;
+    padding: 14px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .ep-results-lbl {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink-light);
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+  }
+
+  .ep-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.3;
+  }
+
+  .ep-bar-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink);
+    width: 62px;
+    flex-shrink: 0;
+  }
+
+  .ep-bar-track {
+    flex: 1;
+    height: 5px;
+    background: rgba(44,26,14,0.1);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .ep-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--teal);
+    width: 0%;
+    transition: width 0.3s;
+  }
+
+  .ep-note {
+    font-size: 11px;
+    color: var(--ink-light);
+    line-height: 1.55;
+    border-top: 1px solid rgba(44,26,14,0.08);
+    padding-top: 10px;
+    /* TODO: remove or update when face-api.js is integrated */
+  }
+
+  /* ── HEADER ───────────────────────────────────────────────── */
+  header {
+    background: var(--ink);
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 150;
+    height: 56px;
+    flex-shrink: 0;
+  }
+
+  .logo {
+    font-family: 'Fredoka One', cursive;
+    font-size: 22px;
+    color: var(--amber);
+    letter-spacing: 0.5px;
+  }
+
+  .logo span { color: var(--teal-mid); }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hdr-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.08);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,248,240,0.65);
+    transition: background 0.2s, color 0.2s;
+    flex-shrink: 0;
+  }
+
+  .hdr-btn:hover  { background: rgba(255,255,255,0.18); color: var(--cream); }
+  .hdr-btn.active { background: var(--teal); color: white; }
+
+  .back-link {
+    font-size: 13px;
+    color: #9FE1CB;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 2px;
+  }
+
+  .back-link:hover { color: var(--teal-mid); }
+
+  /* ── MAIN LAYOUT ─────────────────────────────────────────── */
+  .reader-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 16px 20px;
+    gap: 20px;
+    max-width: 860px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .book-meta { text-align: center; }
+
+  .book-meta h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 26px;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+
+  .book-meta p {
+    font-size: 13px;
+    color: var(--ink-light);
+    margin-top: 4px;
+  }
+
+  /* ── PAGE DISPLAY ────────────────────────────────────────── */
+  .page-container {
+    width: 100%;
+    max-width: 600px;
+    background: white;
+    border-radius: 18px;
+    box-shadow: var(--page-shadow);
+    overflow: hidden;
+    border: 1.5px solid rgba(44,26,14,0.08);
+    position: relative;
+    perspective: 1200px;
+  }
+
+  .page-number-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: rgba(44,26,14,0.55);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    z-index: 3;
+    letter-spacing: 0.04em;
+  }
+
+  .page-img-wrap {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: var(--warm);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .page-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    transition: opacity 0.35s ease;
+  }
+
+  .page-img-wrap img.loading { opacity: 0; }
+
+  .img-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    color: var(--ink-light);
+    font-size: 13px;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+  }
+
+  .img-placeholder.hidden { opacity: 0; pointer-events: none; }
+
+  .flip-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 60px;
+    background: rgba(255,255,255,0.75);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 4;
+    transition: background 0.2s;
+    backdrop-filter: blur(4px);
+  }
+
+  .flip-btn:hover    { background: rgba(255,255,255,0.95); }
+  .flip-btn.prev     { left: 10px; }
+  .flip-btn.next     { right: 10px; }
+  .flip-btn:disabled { opacity: 0.25; cursor: default; }
+  .flip-btn svg      { width: 18px; height: 18px; }
+
+  .page-text {
+    padding: 18px 24px 20px;
+    border-top: 1.5px solid rgba(44,26,14,0.07);
+    min-height: 88px;
+    display: flex;
+    align-items: center;
+  }
+
+  .page-text p {
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .page-inner {
+    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.2s;
+  }
+
+  .page-inner.flip-out { transform: rotateY(-8deg) scale(0.97); opacity: 0; }
+  .page-inner.flip-in  { transform: rotateY(8deg)  scale(0.97); opacity: 0; }
+
+  /* ── AUDIO PLAYER ────────────────────────────────────────── */
+  .audio-player {
+    width: 100%;
+    max-width: 600px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: var(--page-shadow);
+    border: 1.5px solid rgba(44,26,14,0.08);
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .audio-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .play-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--teal);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .play-btn:hover  { background: #0F6E56; }
+  .play-btn:active { transform: scale(0.95); }
+  .play-btn svg    { width: 18px; height: 18px; }
+
+  .audio-info { flex: 1; min-width: 0; }
+
+  .audio-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .audio-status {
+    font-size: 11px;
+    color: var(--ink-light);
+    margin-top: 2px;
+  }
+
+  .audio-time {
+    font-size: 13px;
+    color: var(--ink-light);
+    font-weight: 600;
+    white-space: nowrap;
+    min-width: 72px;
+    text-align: right;
+  }
+
+  .scrubber-row { display: flex; align-items: center; gap: 10px; }
+
+  input[type=range] {
+    flex: 1;
+    height: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: linear-gradient(to right, var(--teal) 0%, var(--teal) var(--pct, 0%), #E1F5EE var(--pct, 0%), #E1F5EE 100%);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--teal);
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 0 0 1px var(--teal-mid);
+  }
+
+  .vol-group { display: flex; align-items: center; gap: 8px; }
+  .vol-icon  { color: var(--ink-light); flex-shrink: 0; }
+
+  .vol-slider {
+    width: 80px !important;
+    flex: none !important;
+  }
+
+  .audio-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .toggles-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-end;
+  }
+
+  .autoplay-toggle {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    color: var(--ink-light);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .toggle-pill {
+    width: 32px;
+    height: 18px;
+    border-radius: 9px;
+    background: #D3D1C7;
+    position: relative;
+    transition: background 0.2s;
+    cursor: pointer;
+    border: none;
+    flex-shrink: 0;
+  }
+
+  .toggle-pill.on { background: var(--teal); }
+
+  .toggle-pill::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: white;
+    top: 3px;
+    left: 3px;
+    transition: transform 0.2s;
+  }
+
+  .toggle-pill.on::after { transform: translateX(14px); }
+
+  /* ── PROGRESS ────────────────────────────────────────────── */
+  .progress-strip {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 6px;
+    background: rgba(44,26,14,0.1);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--amber);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+
+  .progress-label {
+    font-size: 12px;
+    color: var(--ink-light);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* ── BOTTOM NAV ──────────────────────────────────────────── */
+  .bottom-nav {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .nav-btn {
+    height: 44px;
+    padding: 0 22px;
+    border-radius: 22px;
+    border: 2px solid var(--ink);
+    background: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .nav-btn:hover             { background: var(--ink); color: var(--cream); }
+  .nav-btn:disabled          { opacity: 0.25; cursor: default; }
+  .nav-btn:disabled:hover    { background: white; color: var(--ink); }
+
+  .page-dots {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 260px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(44,26,14,0.15);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .dot.active  { background: var(--amber); transform: scale(1.35); }
+  .dot.visited { background: var(--teal-mid); }
+
+  /* ── FOOTER ──────────────────────────────────────────────── */
+  footer {
+    text-align: center;
+    padding: 14px;
+    font-size: 11px;
+    color: var(--ink-light);
+    border-top: 1px solid rgba(44,26,14,0.08);
+  }
+
+  footer a { color: var(--teal); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  /* ── RESPONSIVE ──────────────────────────────────────────── */
+  @media (max-width: 500px) {
+    .book-meta h1  { font-size: 20px; }
+    .page-text p   { font-size: 15px; }
+    .nav-btn       { padding: 0 14px; font-size: 13px; }
+    .play-btn      { width: 42px; height: 42px; }
+    .cover-title   { font-size: 32px; }
+    .back-link span { display: none; }
+  }
+
+  @media (max-width: 360px) {
+    .back-link { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── COVER SCREEN ──────────────────────────────────────────── -->
+<div id="coverScreen">
+  <div class="cover-brand">Monster Wares &nbsp;·&nbsp; Ant Peer Makes</div>
+  <h1 class="cover-title">Ornery Ox<br><span class="hi">Learns to Be Open</span></h1>
+  <p class="cover-sub">A story about openness and friendship</p>
+  <div class="cover-rule"></div>
+  <button class="start-btn" onclick="startReading()">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><polygon points="4,3 18,10 4,17" fill="white"/></svg>
+    Open the Book
+  </button>
+  <div class="cover-author">by <a href="https://antpeermakes.com" target="_blank">antpeermakes.com</a></div>
+</div>
+
+<!-- ── COMPLETION SCREEN ─────────────────────────────────────── -->
+<div id="completionScreen" class="hidden">
+  <svg class="cs-star" viewBox="0 0 72 72" fill="none">
+    <polygon points="36,5 44,26 67,26 49,41 56,63 36,50 16,63 23,41 5,26 28,26" fill="currentColor"/>
+  </svg>
+  <h2 class="cs-title">You finished the book!</h2>
+  <p class="cs-msg">Ornery Ox learned to be open — and so can you.<br>Ready to bring the adventure home?</p>
+  <div class="cs-actions">
+    <a href="https://antpeermakes.com/monsterwares" target="_blank" class="buy-btn">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 2h2l2.4 9.6A2 2 0 0 0 8.32 13H14a2 2 0 0 0 1.94-1.52L17 6H5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8.5" cy="15.5" r="1" fill="currentColor"/><circle cx="13.5" cy="15.5" r="1" fill="currentColor"/></svg>
+      Get the Physical Book
+    </a>
+    <button class="again-btn" onclick="restartBook()">Read Again</button>
+  </div>
+  <div class="cs-credit">
+    A <a href="https://antpeermakes.com">Monster Wares</a> story &mdash; &copy; 2025 Ant Peer Makes
+  </div>
+</div>
+
+<!-- ── EMOTION DETECTION PANEL (SCAFFOLD) ────────────────────────
+     face-api.js integration point.
+     TODO: add CDN script, load models, stream webcam, run detect loop.
+     ─────────────────────────────────────────────────────────────── -->
+<div id="emotionPanel" role="complementary" aria-label="Emotion Detector" aria-hidden="true">
+  <div class="ep-title">
+    Emotion Detector
+    <span class="ep-badge">Coming Soon</span>
+  </div>
+
+  <!-- TODO: swap for <video id="webcamFeed" autoplay muted playsinline> -->
+  <div class="ep-camera" aria-hidden="true">
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+      <path d="M6 14a3 3 0 0 1 3-3h3l2-3h12l2 3h3a3 3 0 0 1 3 3v16a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V14z" stroke="#6B4226" stroke-width="2"/>
+      <circle cx="20" cy="22" r="5" stroke="#6B4226" stroke-width="2"/>
+    </svg>
+    Camera preview
+  </div>
+
+  <!-- TODO: update .ep-bar-fill widths with live emotion scores -->
+  <div class="ep-results">
+    <div class="ep-results-lbl">Detected Emotions</div>
+    <div class="ep-bar"><span class="ep-bar-name">Happy</span><div class="ep-bar-track"><div class="ep-bar-fill"></div></div></div>
+    <div class="ep-bar"><span class="ep-bar-name">Surprised</span><div class="ep-bar-track"><div class="ep-bar-fill"></div></div></div>
+    <div class="ep-bar"><span class="ep-bar-name">Neutral</span><div class="ep-bar-track"><div class="ep-bar-fill"></div></div></div>
+    <div class="ep-bar"><span class="ep-bar-name">Sad</span><div class="ep-bar-track"><div class="ep-bar-fill"></div></div></div>
+    <div class="ep-bar"><span class="ep-bar-name">Angry</span><div class="ep-bar-track"><div class="ep-bar-fill"></div></div></div>
+  </div>
+
+  <div class="ep-note">
+    Webcam access required. Emotion data stays on-device and is never uploaded.
+  </div>
+</div>
+
+<!-- ── HEADER ────────────────────────────────────────────────── -->
+<header>
+  <div class="logo">Monster<span>Wares</span></div>
+  <div class="header-right">
+
+    <!-- Emotion toggle (scaffold — TODO: activate when face-api.js is live) -->
+    <button class="hdr-btn" id="emotionToggleBtn"
+            onclick="toggleEmotionPanel()"
+            title="Emotion Detector (coming soon)"
+            aria-pressed="false">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.7"/>
+        <circle cx="6.5" cy="8" r="1" fill="currentColor"/>
+        <circle cx="11.5" cy="8" r="1" fill="currentColor"/>
+        <path d="M6 11.5s.9 1.5 3 1.5 3-1.5 3-1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <!-- Fullscreen toggle (keyboard: F) -->
+    <button class="hdr-btn" id="fullscreenBtn"
+            onclick="toggleFullscreen()"
+            title="Fullscreen (F)">
+      <svg id="fsIcon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M1 5V1h4M11 1h4v4M15 11v4h-4M5 15H1v-4"
+              stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <a class="back-link" href="https://antpeermakes.com">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>antpeermakes.com</span>
+    </a>
+  </div>
+</header>
+
+<!-- ── MAIN READER ────────────────────────────────────────────── -->
+<div class="reader-wrap">
+
+  <div class="book-meta">
+    <h1>Ornery Ox Learns to Be Open</h1>
+    <p>A Monster Wares story about openness and friendship</p>
+  </div>
+
+  <div class="page-container">
+    <div class="page-number-badge" id="pageBadge">Page 1 of 22</div>
+    <button class="flip-btn prev" id="prevBtn" onclick="changePage(-1)" disabled>
+      <svg viewBox="0 0 18 18" fill="none"><path d="M11 4L6 9l5 5" stroke="#2C1A0E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="flip-btn next" id="nextBtn" onclick="changePage(1)">
+      <svg viewBox="0 0 18 18" fill="none"><path d="M7 4l5 5-5 5" stroke="#2C1A0E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="page-inner" id="pageInner">
+      <div class="page-img-wrap">
+        <div class="img-placeholder" id="imgPlaceholder">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="6" y="10" width="36" height="28" rx="4" stroke="#6B4226" stroke-width="2"/><circle cx="17" cy="20" r="4" stroke="#6B4226" stroke-width="2"/><path d="M6 32l10-8 8 6 6-4 12 8" stroke="#6B4226" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Loading image...</span>
+        </div>
+        <img id="pageImg" src="" alt="Book page illustration" class="loading"
+             onload="imgLoaded()" onerror="imgError()">
+      </div>
+      <div class="page-text">
+        <p id="pageText"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="audio-player">
+    <div class="audio-row">
+      <button class="play-btn" id="playBtn" onclick="togglePlay()">
+        <svg id="playIcon" viewBox="0 0 18 18" fill="none"><polygon points="4,2 16,9 4,16" fill="white"/></svg>
+      </button>
+      <div class="audio-info">
+        <div class="audio-title" id="audioTitle">Page 1 narration</div>
+        <div class="audio-status" id="audioStatus">Ready to play</div>
+      </div>
+      <div class="audio-time" id="audioTime">0:00 / 0:00</div>
+    </div>
+    <div class="scrubber-row">
+      <input type="range" id="scrubber" min="0" max="100" value="0" oninput="seekAudio(this.value)">
+    </div>
+    <div class="audio-bottom">
+      <div class="vol-group">
+        <svg class="vol-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <polygon points="1,5 5,5 9,2 9,14 5,11 1,11" fill="#6B4226"/>
+          <path d="M11 5Q13.5 8 11 11" stroke="#6B4226" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        </svg>
+        <input type="range" class="vol-slider" id="volSlider" min="0" max="100" value="90" oninput="setVolume(this.value)">
+      </div>
+      <div class="toggles-group">
+        <label class="autoplay-toggle">
+          <button class="toggle-pill" id="autoPlayAudioToggle" onclick="toggleAutoPlayAudio()"></button>
+          Auto-play audio
+        </label>
+        <label class="autoplay-toggle">
+          <button class="toggle-pill on" id="autoplayToggle" onclick="toggleAutoplay()"></button>
+          Auto-advance on finish
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="progress-strip">
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:4.5%"></div>
+    </div>
+    <span class="progress-label" id="progressLabel">1 / 22</span>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="nav-btn" id="prevNavBtn" onclick="changePage(-1)" disabled>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Previous
+    </button>
+    <div class="page-dots" id="pageDots"></div>
+    <button class="nav-btn" id="nextNavBtn" onclick="changePage(1)">
+      Next
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+
+</div>
+
+<footer>
+  A <a href="https://antpeermakes.com">Ant Peer Makes</a> production &mdash; Monster Wares &copy; 2025
+</footer>
+
+<audio id="audioEl"></audio>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────
+const BASE  = 'https://raw.githubusercontent.com/antpeermakes/monsterwares-reader/main/';
+const TOTAL = 22;
+
+const pages = [
+  { text: "TEXT HERE PAGE 01" },
+  { text: "TEXT HERE PAGE 02" },
+  { text: "TEXT HERE PAGE 03" },
+  { text: "TEXT HERE PAGE 04" },
+  { text: "TEXT HERE PAGE 05" },
+  { text: "TEXT HERE PAGE 06" },
+  { text: "TEXT HERE PAGE 07" },
+  { text: "TEXT HERE PAGE 08" },
+  { text: "TEXT HERE PAGE 09" },
+  { text: "TEXT HERE PAGE 10" },
+  { text: "TEXT HERE PAGE 11" },
+  { text: "TEXT HERE PAGE 12" },
+  { text: "TEXT HERE PAGE 13" },
+  { text: "TEXT HERE PAGE 14" },
+  { text: "TEXT HERE PAGE 15" },
+  { text: "TEXT HERE PAGE 16" },
+  { text: "TEXT HERE PAGE 17" },
+  { text: "TEXT HERE PAGE 18" },
+  { text: "TEXT HERE PAGE 19" },
+  { text: "TEXT HERE PAGE 20" },
+  { text: "TEXT HERE PAGE 21" },
+  { text: "TEXT HERE PAGE 22" },
+];
+
+// ── STATE ─────────────────────────────────────────────────────
+let current          = 0;
+let autoplay         = true;
+let autoPlayAudio    = false;
+let visited          = new Set([0]);
+let emotionPanelOpen = false;
+
+// ── DOM ───────────────────────────────────────────────────────
+const audioEl   = document.getElementById('audioEl');
+const scrubber  = document.getElementById('scrubber');
+const volSlider = document.getElementById('volSlider');
+
+// ── PAGE-FLIP SOUND (Web Audio API — no external file needed) ─
+let audioCtx = null;
+
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+function playFlipSound() {
+  try {
+    const ctx      = getAudioCtx();
+    const sr       = ctx.sampleRate;
+    const duration = 0.26;
+    const len      = Math.floor(sr * duration);
+    const buf      = ctx.createBuffer(1, len, sr);
+    const data     = buf.getChannelData(0);
+
+    for (let i = 0; i < len; i++) {
+      const t = i / len;
+      // Bell-shaped envelope: soft rise then fall
+      data[i] = (Math.random() * 2 - 1) * Math.sin(Math.PI * t) * 0.32;
+    }
+
+    const src  = ctx.createBufferSource();
+    src.buffer = buf;
+
+    // Bandpass sweeping low → high gives the "whoosh" feeling
+    const bpf   = ctx.createBiquadFilter();
+    bpf.type    = 'bandpass';
+    bpf.Q.value = 0.9;
+    bpf.frequency.setValueAtTime(80, ctx.currentTime);
+    bpf.frequency.linearRampToValueAtTime(420, ctx.currentTime + duration);
+
+    const gain      = ctx.createGain();
+    gain.gain.value = 0.7;
+
+    src.connect(bpf);
+    bpf.connect(gain);
+    gain.connect(ctx.destination);
+    src.start(0);
+  } catch (e) { /* silently skip if Web Audio unavailable */ }
+}
+
+// ── COVER SCREEN ──────────────────────────────────────────────
+function startReading() {
+  document.getElementById('coverScreen').classList.add('hidden');
+}
+
+// ── COMPLETION SCREEN ─────────────────────────────────────────
+function showCompletion() {
+  document.getElementById('completionScreen').classList.remove('hidden');
+}
+
+function restartBook() {
+  document.getElementById('completionScreen').classList.add('hidden');
+  visited = new Set([0]);
+  loadPage(0, 1);
+}
+
+// ── FULLSCREEN ────────────────────────────────────────────────
+const FS_EXPAND   = 'M1 5V1h4M11 1h4v4M15 11v4h-4M5 15H1v-4';
+const FS_CONTRACT = 'M5 1v4H1M15 5V1h-4M11 15v-4h4M1 11v4h4';
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    const el = document.documentElement;
+    (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
+  } else {
+    (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+  }
+}
+
+function syncFullscreenBtn() {
+  const active = !!(document.fullscreenElement || document.webkitFullscreenElement);
+  document.getElementById('fullscreenBtn').classList.toggle('active', active);
+  document.getElementById('fsIcon').querySelector('path')
+    .setAttribute('d', active ? FS_CONTRACT : FS_EXPAND);
+}
+
+document.addEventListener('fullscreenchange',       syncFullscreenBtn);
+document.addEventListener('webkitfullscreenchange', syncFullscreenBtn);
+
+// ── EMOTION PANEL (SCAFFOLD) ──────────────────────────────────
+// TODO: When integrating face-api.js —
+//   1. Load CDN: <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js">
+//   2. Load models: await faceapi.nets.tinyFaceDetector.loadFromUri('/models')
+//   3. Start webcam into <video id="webcamFeed">
+//   4. Run detection loop; update .ep-bar-fill widths with live scores
+function toggleEmotionPanel() {
+  emotionPanelOpen = !emotionPanelOpen;
+  const panel = document.getElementById('emotionPanel');
+  const btn   = document.getElementById('emotionToggleBtn');
+  panel.classList.toggle('open', emotionPanelOpen);
+  panel.setAttribute('aria-hidden', String(!emotionPanelOpen));
+  btn.classList.toggle('active', emotionPanelOpen);
+  btn.setAttribute('aria-pressed', String(emotionPanelOpen));
+}
+
+// ── HELPERS ───────────────────────────────────────────────────
+function pad(n) { return String(n + 1).padStart(2, '0'); }
+
+function fmt(s) {
+  if (isNaN(s)) return '0:00';
+  return Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+}
+
+function setPlayIcon(playing) {
+  document.getElementById('playIcon').innerHTML = playing
+    ? '<rect x="3" y="2" width="4" height="14" rx="1" fill="white"/><rect x="11" y="2" width="4" height="14" rx="1" fill="white"/>'
+    : '<polygon points="4,2 16,9 4,16" fill="white"/>';
+}
+
+// ── PAGE NAVIGATION ───────────────────────────────────────────
+function loadPage(idx, direction) {
+  const inner = document.getElementById('pageInner');
+  inner.classList.add(direction === 1 ? 'flip-out' : 'flip-in');
+
+  setTimeout(() => {
+    current = idx;
+    visited.add(idx);
+
+    const img         = document.getElementById('pageImg');
+    const placeholder = document.getElementById('imgPlaceholder');
+    img.classList.add('loading');
+    placeholder.classList.remove('hidden');
+    img.src = BASE + 'page-' + pad(idx) + '.png';
+
+    document.getElementById('pageText').textContent      = pages[idx].text;
+    document.getElementById('pageBadge').textContent     = 'Page ' + (idx + 1) + ' of ' + TOTAL;
+    document.getElementById('audioTitle').textContent    = 'Page ' + (idx + 1) + ' narration';
+    document.getElementById('audioStatus').textContent   = 'Ready to play';
+    document.getElementById('audioTime').textContent     = '0:00 / 0:00';
+    document.getElementById('progressLabel').textContent = (idx + 1) + ' / ' + TOTAL;
+    document.getElementById('progressFill').style.width  = ((idx + 1) / TOTAL * 100).toFixed(1) + '%';
+
+    scrubber.value = 0;
+    scrubber.style.setProperty('--pct', '0%');
+
+    audioEl.pause();
+    audioEl.src = BASE + 'page-' + pad(idx) + '.mp3';
+    if (autoPlayAudio) {
+      audioEl.play().then(() => {
+        document.getElementById('audioStatus').textContent = 'Playing...';
+        setPlayIcon(true);
+      }).catch(() => audioEl.load());
+    } else {
+      audioEl.load();
+      setPlayIcon(false);
+    }
+
+    document.getElementById('prevBtn').disabled    = idx === 0;
+    document.getElementById('nextBtn').disabled    = idx === TOTAL - 1;
+    document.getElementById('prevNavBtn').disabled = idx === 0;
+    document.getElementById('nextNavBtn').disabled = idx === TOTAL - 1;
+
+    renderDots();
+
+    inner.classList.remove('flip-out', 'flip-in');
+    inner.classList.add(direction === 1 ? 'flip-in' : 'flip-out');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      inner.classList.remove('flip-in', 'flip-out');
+    }));
+  }, 180);
+}
+
+function changePage(dir) {
+  const next = current + dir;
+  if (next < 0 || next >= TOTAL) return;
+  playFlipSound();
+  loadPage(next, dir);
+}
+
+// ── IMAGE EVENTS ──────────────────────────────────────────────
+function imgLoaded() {
+  document.getElementById('pageImg').classList.remove('loading');
+  document.getElementById('imgPlaceholder').classList.add('hidden');
+}
+
+function imgError() {
+  const ph = document.getElementById('imgPlaceholder');
+  ph.classList.remove('hidden');
+  ph.querySelector('span').textContent = 'Image not found';
+}
+
+// ── AUDIO ─────────────────────────────────────────────────────
+function togglePlay() {
+  if (audioEl.paused) {
+    audioEl.play();
+    document.getElementById('audioStatus').textContent = 'Playing...';
+    setPlayIcon(true);
+  } else {
+    audioEl.pause();
+    document.getElementById('audioStatus').textContent = 'Paused';
+    setPlayIcon(false);
+  }
+}
+
+audioEl.addEventListener('timeupdate', () => {
+  const pct = audioEl.duration ? audioEl.currentTime / audioEl.duration * 100 : 0;
+  scrubber.value = pct;
+  scrubber.style.setProperty('--pct', pct.toFixed(1) + '%');
+  document.getElementById('audioTime').textContent = fmt(audioEl.currentTime) + ' / ' + fmt(audioEl.duration);
+});
+
+audioEl.addEventListener('ended', () => {
+  setPlayIcon(false);
+  document.getElementById('audioStatus').textContent = 'Finished';
+  if (current === TOTAL - 1) {
+    setTimeout(showCompletion, 1400);
+  } else if (autoplay) {
+    setTimeout(() => changePage(1), 800);
+  }
+});
+
+audioEl.addEventListener('error', () => {
+  document.getElementById('audioStatus').textContent = 'Audio unavailable';
+});
+
+function seekAudio(val) {
+  if (audioEl.duration) audioEl.currentTime = audioEl.duration * val / 100;
+  scrubber.style.setProperty('--pct', val + '%');
+}
+
+function setVolume(val) {
+  audioEl.volume = val / 100;
+  volSlider.style.setProperty('--pct', val + '%');
+}
+
+function toggleAutoplay() {
+  autoplay = !autoplay;
+  document.getElementById('autoplayToggle').classList.toggle('on', autoplay);
+}
+
+function toggleAutoPlayAudio() {
+  autoPlayAudio = !autoPlayAudio;
+  document.getElementById('autoPlayAudioToggle').classList.toggle('on', autoPlayAudio);
+}
+
+// ── DOT PROGRESS ──────────────────────────────────────────────
+function renderDots() {
+  const c = document.getElementById('pageDots');
+  c.innerHTML = '';
+  for (let i = 0; i < TOTAL; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === current ? ' active' : visited.has(i) ? ' visited' : '');
+    d.title = 'Page ' + (i + 1);
+    d.onclick = () => { if (i !== current) { playFlipSound(); loadPage(i, i > current ? 1 : -1); } };
+    c.appendChild(d);
+  }
+}
+
+// ── KEYBOARD SHORTCUTS ────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') changePage(1);
+  if (e.key === 'ArrowLeft')  changePage(-1);
+  if (e.key === ' ')          { e.preventDefault(); togglePlay(); }
+  if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+});
+
+// ── INIT ──────────────────────────────────────────────────────
+volSlider.style.setProperty('--pct', '90%');
+renderDots();
+loadPage(0, 1);
+</script>
+</body>
+</html>
