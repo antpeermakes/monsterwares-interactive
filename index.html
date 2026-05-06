@@ -25,7 +25,7 @@
       └── page-01.mp3 ... page-18.mp3
 
   To activate a book change its status from
-  "coming-soon" to "available" in the books[] array.
+  "available" to "available" in the books[] array.
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -962,7 +962,7 @@
     display: inline-block;
   }
 
-  .badge-coming-soon {
+  .badge-available {
     background: #EF9F27;
     color: #2C1A0E;
     font-size: 11px;
@@ -1027,7 +1027,7 @@
 
   .book-card.available  { cursor: pointer; }
   .book-card.available:hover { transform: scale(1.04); }
-  .book-card.coming-soon { opacity: 0.6; cursor: not-allowed; }
+  .book-card.available { opacity: 0.6; cursor: not-allowed; }
 
   .book-card-cover {
     width: 100%;
@@ -1168,54 +1168,54 @@
     </button>
   </div>
 
-  <!-- Grid: 6 coming-soon books -->
+  <!-- Grid: 6 available books -->
   <div class="grid-section-title">More Books Coming Soon</div>
   <div class="book-grid">
 
     <!-- Panic Pat -->
-    <div class="book-card coming-soon">
+    <div class="book-card available">
       <div class="book-card-placeholder"><div class="mw-logo-sm">MW</div></div>
-      <span class="badge-coming-soon">Coming Soon</span>
+      <span class="badge-available">Coming Soon</span>
       <div class="book-card-title">Panic Pat Practices Peace Over Panic</div>
       <div class="book-card-illustrator">Illus. Polina Bakalina</div>
     </div>
 
     <!-- Rob Rage -->
-    <div class="book-card coming-soon">
+    <div class="book-card available">
       <div class="book-card-placeholder"><div class="mw-logo-sm">MW</div></div>
-      <span class="badge-coming-soon">Coming Soon</span>
+      <span class="badge-available">Coming Soon</span>
       <div class="book-card-title">Rob Rage Learns Restraint</div>
       <div class="book-card-illustrator">Illus. Paul John Federico</div>
     </div>
 
     <!-- Yucky Yarvin -->
-    <div class="book-card coming-soon">
+    <div class="book-card available">
       <div class="book-card-placeholder"><div class="mw-logo-sm">MW</div></div>
-      <span class="badge-coming-soon">Coming Soon</span>
+      <span class="badge-available">Coming Soon</span>
       <div class="book-card-title">Yucky Yarvins Yearning for Youthfulness</div>
       <div class="book-card-illustrator">Illus. Jacob Davenport</div>
     </div>
 
     <!-- Violent Vicky -->
-    <div class="book-card coming-soon">
+    <div class="book-card available">
       <div class="book-card-placeholder"><div class="mw-logo-sm">MW</div></div>
-      <span class="badge-coming-soon">Coming Soon</span>
+      <span class="badge-available">Coming Soon</span>
       <div class="book-card-title">Violent Vicky's Vision of Virtue</div>
       <div class="book-card-illustrator">Illus. TBD</div>
     </div>
 
     <!-- Boo-Hoo Bob -->
-    <div class="book-card coming-soon">
+    <div class="book-card available">
       <div class="book-card-placeholder"><div class="mw-logo-sm">MW</div></div>
-      <span class="badge-coming-soon">Coming Soon</span>
+      <span class="badge-available">Coming Soon</span>
       <div class="book-card-title">Boo-Hoo Bob Becomes Bold</div>
       <div class="book-card-illustrator">Illus. Maria Naranjo</div>
     </div>
 
     <!-- Goofy Goblin -->
-    <div class="book-card coming-soon">
+    <div class="book-card available">
       <div class="book-card-placeholder"><div class="mw-logo-sm">MW</div></div>
-      <span class="badge-coming-soon">Coming Soon</span>
+      <span class="badge-available">Coming Soon</span>
       <div class="book-card-title">Goofy Goblin Goes from Gaffes to Goodness</div>
       <div class="book-card-illustrator">Illus. TBD</div>
     </div>
@@ -1381,12 +1381,12 @@ const pages = [
 // ── BOOKS ─────────────────────────────────────────────────────
 const books = [
   { id: "ornery-ox",     title: "The Ornery Ox Learns to Be Open",               subtitle: "Written by Ant Peer", folder: "ornery-ox/",    totalPages: 18, status: "available",   illustrator: "Paul John Federico" },
-  { id: "panic-pat",     title: "Panic Pat Practices Peace Over Panic",           subtitle: "Written by Ant Peer", folder: "panic-pat/",    totalPages: 18, status: "coming-soon", illustrator: "Polina Bakalina"    },
-  { id: "rob-rage",      title: "Rob Rage Learns Restraint",                      subtitle: "Written by Ant Peer", folder: "rob-rage/",     totalPages: 18, status: "coming-soon", illustrator: "Paul John Federico" },
-  { id: "yucky-yarvin",  title: "Yucky Yarvins Yearning for Youthfulness",        subtitle: "Written by Ant Peer", folder: "yucky-yarvin/", totalPages: 18, status: "coming-soon", illustrator: "Jacob Davenport"    },
-  { id: "violent-vicky", title: "Violent Vicky's Vision of Virtue",               subtitle: "Written by Ant Peer", folder: "violent-vicky/",totalPages: 18, status: "coming-soon", illustrator: "TBD"                },
-  { id: "boo-hoo-bob",   title: "Boo-Hoo Bob Becomes Bold",                       subtitle: "Written by Ant Peer", folder: "boo-hoo-bob/",  totalPages: 18, status: "coming-soon", illustrator: "Maria Naranjo"      },
-  { id: "goofy-goblin",  title: "Goofy Goblin Goes from Gaffes to Goodness",      subtitle: "Written by Ant Peer", folder: "goofy-goblin/", totalPages: 18, status: "coming-soon", illustrator: "TBD"                }
+  { id: "panic-pat",     title: "Panic Pat Practices Peace Over Panic",           subtitle: "Written by Ant Peer", folder: "panic-pat/",    totalPages: 18, status: "available", illustrator: "Polina Bakalina"    },
+  { id: "rob-rage",      title: "Rob Rage Learns Restraint",                      subtitle: "Written by Ant Peer", folder: "rob-rage/",     totalPages: 18, status: "available", illustrator: "Paul John Federico" },
+  { id: "yucky-yarvin",  title: "Yucky Yarvins Yearning for Youthfulness",        subtitle: "Written by Ant Peer", folder: "yucky-yarvin/", totalPages: 18, status: "available", illustrator: "Jacob Davenport"    },
+  { id: "violent-vicky", title: "Violent Vicky's Vision of Virtue",               subtitle: "Written by Ant Peer", folder: "violent-vicky/",totalPages: 18, status: "available", illustrator: "TBD"                },
+  { id: "boo-hoo-bob",   title: "Boo-Hoo Bob Becomes Bold",                       subtitle: "Written by Ant Peer", folder: "boo-hoo-bob/",  totalPages: 18, status: "available", illustrator: "Maria Naranjo"      },
+  { id: "goofy-goblin",  title: "Goofy Goblin Goes from Gaffes to Goodness",      subtitle: "Written by Ant Peer", folder: "goofy-goblin/", totalPages: 18, status: "available", illustrator: "TBD"                }
 ];
 
 const panicPatPages    = Array.from({length: 18}, (_, i) => ({ text: "TEXT HERE PAGE " + String(i + 1).padStart(2, '0') }));
