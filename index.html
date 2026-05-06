@@ -1168,59 +1168,9 @@
     </button>
   </div>
 
-  <!-- Grid: 6 available books -->
-  <div class="grid-section-title">More Books Coming Soon</div>
-  <div class="book-grid">
-
-    <!-- Panic Pat -->
-    <div class="book-card available">
-      <div class="book-card-placeholder"><div class="mw-logo-sm">MW</div></div>
-      <span class="badge-available">Coming Soon</span>
-      <div class="book-card-title">Panic Pat Practices Peace Over Panic</div>
-      <div class="book-card-illustrator">Illus. Polina Bakalina</div>
-    </div>
-
-    <!-- Rob Rage -->
-    <div class="book-card available">
-      <div class="book-card-placeholder"><div class="mw-logo-sm">MW</div></div>
-      <span class="badge-available">Coming Soon</span>
-      <div class="book-card-title">Rob Rage Learns Restraint</div>
-      <div class="book-card-illustrator">Illus. Paul John Federico</div>
-    </div>
-
-    <!-- Yucky Yarvin -->
-    <div class="book-card available">
-      <div class="book-card-placeholder"><div class="mw-logo-sm">MW</div></div>
-      <span class="badge-available">Coming Soon</span>
-      <div class="book-card-title">Yucky Yarvins Yearning for Youthfulness</div>
-      <div class="book-card-illustrator">Illus. Jacob Davenport</div>
-    </div>
-
-    <!-- Violent Vicky -->
-    <div class="book-card available">
-      <div class="book-card-placeholder"><div class="mw-logo-sm">MW</div></div>
-      <span class="badge-available">Coming Soon</span>
-      <div class="book-card-title">Violent Vicky's Vision of Virtue</div>
-      <div class="book-card-illustrator">Illus. TBD</div>
-    </div>
-
-    <!-- Boo-Hoo Bob -->
-    <div class="book-card available">
-      <div class="book-card-placeholder"><div class="mw-logo-sm">MW</div></div>
-      <span class="badge-available">Coming Soon</span>
-      <div class="book-card-title">Boo-Hoo Bob Becomes Bold</div>
-      <div class="book-card-illustrator">Illus. Maria Naranjo</div>
-    </div>
-
-    <!-- Goofy Goblin -->
-    <div class="book-card available">
-      <div class="book-card-placeholder"><div class="mw-logo-sm">MW</div></div>
-      <span class="badge-available">Coming Soon</span>
-      <div class="book-card-title">Goofy Goblin Goes from Gaffes to Goodness</div>
-      <div class="book-card-illustrator">Illus. TBD</div>
-    </div>
-
-  </div>
+  <!-- Grid rendered dynamically by renderBookGrid() -->
+  <div class="grid-section-title" id="gridTitle"></div>
+  <div class="book-grid" id="bookGrid"></div>
 </div>
 
 <!-- ── HEADER ────────────────────────────────────────────────── -->
@@ -1662,7 +1612,34 @@ function toggleAutoPlayAudio() {
 }
 
 // ── SELECTION SCREEN ──────────────────────────────────────────
+function renderBookGrid() {
+  const grid  = document.getElementById('bookGrid');
+  const title = document.getElementById('gridTitle');
+  const otherBooks = books.filter(b => b.id !== 'ornery-ox');
+  const allAvailable = otherBooks.every(b => b.status === 'available');
+  title.textContent = allAvailable ? 'More Books' : 'More Books Coming Soon';
+  grid.innerHTML = '';
+  otherBooks.forEach(book => {
+    const available = book.status === 'available';
+    const coverUrl  = 'https://raw.githubusercontent.com/antpeermakes/monsterwares-reader/main/' + book.folder + 'page-01.png';
+    const card = document.createElement('div');
+    card.className = 'book-card ' + (available ? 'available' : 'coming-soon');
+    if (available) card.onclick = () => openBook(book.id);
+    card.innerHTML = available
+      ? `<img class="book-card-cover" src="${coverUrl}" alt="${book.title}">
+         <span class="badge-available">Available Now</span>
+         <div class="book-card-title">${book.title}</div>
+         <div class="book-card-illustrator">Illus. ${book.illustrator}</div>`
+      : `<div class="book-card-placeholder"><div class="mw-logo-sm">MW</div></div>
+         <span class="badge-coming-soon">Coming Soon</span>
+         <div class="book-card-title">${book.title}</div>
+         <div class="book-card-illustrator">Illus. ${book.illustrator}</div>`;
+    grid.appendChild(card);
+  });
+}
+
 function showSelectionScreen() {
+  renderBookGrid();
   audioEl.pause();
   audioEl.src = '';
   document.getElementById('bookSelection').style.display = 'flex';
