@@ -1,3 +1,32 @@
+<!--
+  GITHUB REPO FOLDER STRUCTURE
+  =============================
+  monsterwares-reader/
+  ├── index.html
+  ├── page-01.png ... page-18.png     ← Ornery Ox images
+  ├── page-01.mp3 ... page-18.mp3     ← Ornery Ox audio
+  ├── panic-pat/
+  │   ├── page-01.png ... page-18.png
+  │   └── page-01.mp3 ... page-18.mp3
+  ├── rob-rage/
+  │   ├── page-01.png ... page-18.png
+  │   └── page-01.mp3 ... page-18.mp3
+  ├── yucky-yarvin/
+  │   ├── page-01.png ... page-18.png
+  │   └── page-01.mp3 ... page-18.mp3
+  ├── violent-vicky/
+  │   ├── page-01.png ... page-18.png
+  │   └── page-01.mp3 ... page-18.mp3
+  ├── boo-hoo-bob/
+  │   ├── page-01.png ... page-18.png
+  │   └── page-01.mp3 ... page-18.mp3
+  └── goofy-goblin/
+      ├── page-01.png ... page-18.png
+      └── page-01.mp3 ... page-18.mp3
+
+  To activate a book change its status from
+  "coming-soon" to "available" in the books[] array.
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -524,15 +553,34 @@
     padding: 18px 24px 20px;
     border-top: 1.5px solid rgba(44,26,14,0.07);
     min-height: 88px;
+    max-height: 160px;
+    overflow-y: auto;
     display: flex;
     align-items: center;
+    scrollbar-width: thin;
+    scrollbar-color: #1D9E75 #FFF8F0;
   }
+
+  .page-text.is-scrollable {
+    align-items: flex-start;
+    box-shadow: inset 0 -40px 20px rgba(255, 255, 255, 0.92);
+  }
+
+  .page-text.is-scrollable.at-bottom {
+    box-shadow: none;
+  }
+
+  .page-text::-webkit-scrollbar { width: 4px; }
+  .page-text::-webkit-scrollbar-track { background: #FFF8F0; border-radius: 2px; }
+  .page-text::-webkit-scrollbar-thumb { background: #1D9E75; border-radius: 2px; }
 
   .page-text p {
     font-size: 17px;
     line-height: 1.65;
     color: var(--ink);
     font-weight: 600;
+    width: 100%;
+    white-space: pre-wrap;
   }
 
   .page-inner {
@@ -782,12 +830,13 @@
     border-top: 1px solid rgba(44,26,14,0.08);
   }
 
-  footer a { color: var(--amber); text-decoration: none; }
+  footer a { color: var(--black); text-decoration: none; }
   footer a:hover { text-decoration: underline; }
 
   /* ── RESPONSIVE ──────────────────────────────────────────── */
   @media (max-width: 500px) {
     .book-meta h1  { font-size: 20px; }
+    .page-text     { max-height: 120px; }
     .page-text p   { font-size: 15px; }
     .nav-btn       { padding: 0 14px; font-size: 13px; }
     .play-btn      { width: 42px; height: 42px; }
@@ -797,6 +846,231 @@
 
   @media (max-width: 360px) {
     .back-link { display: none; }
+  }
+
+  /* ── BOOK SELECTION SCREEN ───────────────────────────────────── */
+  #bookSelection {
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    background: #141414;
+    min-height: 100vh;
+    padding: 24px 20px 40px;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  .selection-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .selection-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .mw-logo {
+    width: 44px;
+    height: 44px;
+    background: #F97316;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: 17px;
+    color: white;
+    flex-shrink: 0;
+    letter-spacing: -1px;
+  }
+
+  .mw-logo-sm {
+    width: 52px;
+    height: 52px;
+    background: rgba(249,115,22,0.18);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: 20px;
+    color: rgba(249,115,22,0.5);
+    letter-spacing: -1px;
+  }
+
+  .selection-logo-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 20px;
+    color: white;
+    line-height: 1.2;
+  }
+
+  .selection-author {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .featured-book {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+    gap: 12px;
+  }
+
+  .featured-cover {
+    width: 280px;
+    max-width: 80vw;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    cursor: pointer;
+    transition: transform 0.2s;
+    display: block;
+  }
+
+  .featured-cover:hover { transform: scale(1.03); }
+
+  .featured-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 22px;
+    color: white;
+    text-align: center;
+    max-width: 320px;
+  }
+
+  .featured-illustrator {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+  }
+
+  .badge-available {
+    background: #1D9E75;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    display: inline-block;
+  }
+
+  .badge-coming-soon {
+    background: #EF9F27;
+    color: #2C1A0E;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    animation: pulse 2s infinite;
+    display: inline-block;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.6; }
+  }
+
+  .read-now-btn {
+    background: #1D9E75;
+    color: white;
+    border: none;
+    padding: 14px 36px;
+    border-radius: 30px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .read-now-btn:hover  { background: #0F6E56; transform: scale(1.03); }
+  .read-now-btn:active { transform: scale(0.97); }
+
+  .grid-section-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 14px;
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .book-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 860px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .book-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+
+  .book-card.available  { cursor: pointer; }
+  .book-card.available:hover { transform: scale(1.04); }
+  .book-card.coming-soon { opacity: 0.6; cursor: not-allowed; }
+
+  .book-card-cover {
+    width: 100%;
+    aspect-ratio: 4/3;
+    border-radius: 10px;
+    object-fit: cover;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  }
+
+  .book-card-placeholder {
+    width: 100%;
+    aspect-ratio: 4/3;
+    border-radius: 10px;
+    background: #2a2a2a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .book-card-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 13px;
+    color: white;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .book-card-illustrator {
+    font-size: 10px;
+    color: rgba(255,255,255,0.35);
+    text-align: center;
+  }
+
+  @media (max-width: 600px) {
+    .book-grid            { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .featured-cover       { width: 220px; }
+    .featured-title       { font-size: 18px; }
+    .selection-logo-title { font-size: 16px; }
+  }
+
+  @media (max-width: 400px) {
+    .selection-header { flex-direction: column; align-items: flex-start; }
   }
 </style>
 </head>
@@ -868,6 +1142,87 @@
   </div>
 </div>
 
+<!-- ── BOOK SELECTION SCREEN ─────────────────────────────────── -->
+<div id="bookSelection">
+
+  <div class="selection-header">
+    <div class="selection-logo">
+      <div class="mw-logo">MW</div>
+      <div class="selection-logo-title">MONSTER WARES<br>BOOK SERIES</div>
+    </div>
+    <div class="selection-author">Written by Ant Peer</div>
+  </div>
+
+  <!-- Featured: Ornery Ox -->
+  <div class="featured-book">
+    <span class="badge-available">Available Now</span>
+    <img class="featured-cover"
+         src="https://raw.githubusercontent.com/antpeermakes/monsterwares-reader/main/ornery-ox/page-01.png"
+         alt="The Ornery Ox Learns to Be Open"
+         onclick="openBook('ornery-ox')">
+    <div class="featured-title">The Ornery Ox Learns to Be Open</div>
+    <div class="featured-illustrator">Illustrations by Paul John Federico</div>
+    <button class="read-now-btn" onclick="openBook('ornery-ox')">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><polygon points="3,2 14,8 3,14" fill="white"/></svg>
+      Read Now
+    </button>
+  </div>
+
+  <!-- Grid: 6 coming-soon books -->
+  <div class="grid-section-title">More Books Coming Soon</div>
+  <div class="book-grid">
+
+    <!-- Panic Pat -->
+    <div class="book-card coming-soon">
+      <div class="book-card-placeholder"><div class="mw-logo-sm">MW</div></div>
+      <span class="badge-coming-soon">Coming Soon</span>
+      <div class="book-card-title">Panic Pat Practices Peace Over Panic</div>
+      <div class="book-card-illustrator">Illus. Polina Bakalina</div>
+    </div>
+
+    <!-- Rob Rage -->
+    <div class="book-card coming-soon">
+      <div class="book-card-placeholder"><div class="mw-logo-sm">MW</div></div>
+      <span class="badge-coming-soon">Coming Soon</span>
+      <div class="book-card-title">Rob Rage Learns Restraint</div>
+      <div class="book-card-illustrator">Illus. Paul John Federico</div>
+    </div>
+
+    <!-- Yucky Yarvin -->
+    <div class="book-card coming-soon">
+      <div class="book-card-placeholder"><div class="mw-logo-sm">MW</div></div>
+      <span class="badge-coming-soon">Coming Soon</span>
+      <div class="book-card-title">Yucky Yarvins Yearning for Youthfulness</div>
+      <div class="book-card-illustrator">Illus. Jacob Davenport</div>
+    </div>
+
+    <!-- Violent Vicky -->
+    <div class="book-card coming-soon">
+      <div class="book-card-placeholder"><div class="mw-logo-sm">MW</div></div>
+      <span class="badge-coming-soon">Coming Soon</span>
+      <div class="book-card-title">Violent Vicky's Vision of Virtue</div>
+      <div class="book-card-illustrator">Illus. TBD</div>
+    </div>
+
+    <!-- Boo-Hoo Bob -->
+    <div class="book-card coming-soon">
+      <div class="book-card-placeholder"><div class="mw-logo-sm">MW</div></div>
+      <span class="badge-coming-soon">Coming Soon</span>
+      <div class="book-card-title">Boo-Hoo Bob Becomes Bold</div>
+      <div class="book-card-illustrator">Illus. Maria Naranjo</div>
+    </div>
+
+    <!-- Goofy Goblin -->
+    <div class="book-card coming-soon">
+      <div class="book-card-placeholder"><div class="mw-logo-sm">MW</div></div>
+      <span class="badge-coming-soon">Coming Soon</span>
+      <div class="book-card-title">Goofy Goblin Goes from Gaffes to Goodness</div>
+      <div class="book-card-illustrator">Illus. TBD</div>
+    </div>
+
+  </div>
+</div>
+
 <!-- ── HEADER ────────────────────────────────────────────────── -->
 <header>
   <div class="logo">Monster<span>Wares</span></div>
@@ -896,9 +1251,9 @@
       </svg>
     </button>
 
-    <a class="back-link" href="https://antpeermakes.com">
+    <a class="back-link" href="#" onclick="showSelectionScreen(); return false;">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>antpeermakes.com</span>
+      <span>All Books</span>
     </a>
   </div>
 </header>
@@ -998,33 +1353,61 @@
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BASE  = 'https://raw.githubusercontent.com/antpeermakes/monsterwares-reader/main/';
-const TOTAL = 22;
+let BASE  = 'https://raw.githubusercontent.com/antpeermakes/monsterwares-reader/main/';
+let TOTAL = 18;
+const pageFiles = ['01','03','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','22'];
 
 const pages = [
-  { text: "TEXT HERE PAGE 01" },
-  { text: "TEXT HERE PAGE 02" },
-  { text: "TEXT HERE PAGE 03" },
-  { text: "TEXT HERE PAGE 04" },
-  { text: "TEXT HERE PAGE 05" },
-  { text: "TEXT HERE PAGE 06" },
-  { text: "TEXT HERE PAGE 07" },
-  { text: "TEXT HERE PAGE 08" },
-  { text: "TEXT HERE PAGE 09" },
-  { text: "TEXT HERE PAGE 10" },
-  { text: "TEXT HERE PAGE 11" },
-  { text: "TEXT HERE PAGE 12" },
-  { text: "TEXT HERE PAGE 13" },
-  { text: "TEXT HERE PAGE 14" },
-  { text: "TEXT HERE PAGE 15" },
-  { text: "TEXT HERE PAGE 16" },
-  { text: "TEXT HERE PAGE 17" },
-  { text: "TEXT HERE PAGE 18" },
-  { text: "TEXT HERE PAGE 19" },
-  { text: "TEXT HERE PAGE 20" },
-  { text: "TEXT HERE PAGE 21" },
-  { text: "TEXT HERE PAGE 22" },
+  { text: "\"Monster Wares\" The Monster Emotions Book Series - The Ornery Ox Learns to Be Open Created and Written by Ant Peer Illustrations by John Paul Federico \"Monster Goods, Made Well\"" },
+  { text: "To Every Little Monster - Dear Little Monsters, These stories were written to share the Joy that comes from Knowing that those Monster Emotions which may seem like Big Monsters at Times can be made Small by taking every opportunity in life to learn to “Love Your Neighbor as Yourself” - Mark 12:31 There is No Greater Lesson in Life than that! So go outside and Bring those Monsters into the Light! Your Fellow Monster Made Well - Ant Peer 10% of the Proceeds from Monster Wares Products are donated to NAMI  (The National Alliance on Mental Illness)" },
+  { text: "The Ornery Ox Often isn’t invited on Outings, as Ox’s Oppressive attitude can be Onerous On Others mood." },
+  { text: "Ornery means that we Express Outwardly a Stubborn, Easily Combative, and Annoyed attitude towards Others." },
+  { text: "We allow the Ornery Ox in Us to be in Opposition with Others and become Outraged." },
+  { text: "Even when Out On small Occasions we can Often show Outward Anger by being Ornery with Others!" },
+  { text: "How do we stop Overfeeding the Ornery parts of Ourselves?" },
+  { text: "Openness! With a willingness to Consider Or Embrace different perspectives,we can Oppose the Oppressive attitude of Orneriness." },
+  { text: "When we Open Ourselves up to Others, we can see that Others’ actions shouldn’t control Our mood. " },
+  { text: "Operating in a way that allows Openness to new experiences and positive Outcomes Often leads to Growth!" },
+  { text: "Being Open allows Joy to Overflow from Within Ourselves and bring Ongoing Happiness to Others." },
+  { text: "The Old Ornery Ox within Ourselves will Only ripple Out on the Surface when we take Our Mind Off the Goal to be Open to New Challenges." },
+  { text: "Openness helps us get rid of the Ornery One-minded stubbornness that Oppresses Our inner peace." },
+  { text: "By Opening up our arms to Others as we can, bringing joy to Others will become an Ordinary Occurence." },
+  { text: "LETTER \"O\" WORD PAGE\n\n1. Ornery - Bad Tempered and Combative or Stubborn\n2. Ox - Is a large, strong animal that is often used on farms to pull heavy loads.\n3. Often - Happening many times or frequently.\n4. Outings - a fun trip outside with family or friends.\n5. Oppressive - Something that is very harsh or unfair.\n6. Onerous - something that is very hard to do or heavy like a big backpack.\n7. Outwardly - Showing something that you feel, like smiling when you're happy.\n8. Others - People who are not you, like your friends or family members.\n\n(BONUS) Stubborn - wanting to do things your way and not changing your mind.\n(BONUS) Combative - Being ready to fight or argue, like someone who always wants to disagree or pick a fight.\n(BONUS) Annoyed - feeling a little angry or frustrated, like when someone does something that bothers you.\n\n9. Opposition - Disagreeing with someone.\n10. Outraged - Feeling very angry or upset about something.\n11. Out - Something is outside or not inside.\n12. On - Something is turned on or placed on top of something else.\n13. Occasions - A special time or event, like a birthday or holiday.\n14. Outward - Moving or going outside, away from something.\n15. Overfeeding - Taking in more than you need.\n16. Ourselves - You and the people with you, like your family or friends.\n17. Openness - Being willing to share your thoughts and feelings with others.\n18. Oppose - To disagree with something or someone." },
+  { text: "LETTER \"O\" WORD PAGE cont.\n\n19. Oppressive - Something that feels unfair or makes you feel trapped or unhappy.\n20. Orneriness - Being grumpy or stubborn, like when someone is easily annoyed.\n21. Open - Something is not closed, like a door that you can walk through.\n22. Our - Something belongs to you and the people with you.\n23. Operating - Using or controlling something, like a machine or a car.\n24. Outcomes - The results of something, like what happens after you do something.\n25. Often - Something that happens many times.\n26. Overflow - Something flows over the top edge, like water from a full container.\n27. Ongoing - Something is happening now and will continue for a while.\n28. Only - Something is the single one, like there's no other.\n29. Off - Something is taken away from a current place.\n30. One-minded - Focusing on just one thing, like having a single goal.\n31. Opening - A beginning, a hole or gap, an Opportunity.\n32. Ordinary - Of no special quality or interest; commonplace; unexceptional.\n33. Occurrence - Existence or presence of something." },
+  { text: "Monster Mood Managment Tips - Being Open When Feeling Ornery\n\n1. Practice Active Listening: Take a moment to really hear what others are saying. This can help you feel more connected and less defensive.\n\n2. Share Your Feelings: Express your ornery mood to someone you trust. Being open about your emotions can lighten the burden and invite support.\n\n3. Reframe Your Thoughts: Challenge negative thoughts by asking yourself if there's another perspective. Try to find a silver lining in the situation.\n\n4. Engage in Open Dialogue: If something is bothering you, discuss it openly with those involved rather than bottling it up. Clear communication can ease tension.\n\n5. Try New Experiences: Step out of your comfort zone by trying something new, whether it's a hobby, food, or social activity. This can shift your mood and broaden your perspective.\n\n6. Seek Feedback: Ask for input from friends or family about how you're coming across. Being open to constructive criticism can help you adjust your attitude.\n\n*Remember, it's okay to feel ornery sometimes. These Tips can help manage the emotion and improve your overall mood.*\n\n\"A Hot-Tempered person Stirs up Conflict, but the one who is patient calms a quarrel\" Proverbs 15:18" },
+  { text: "A Prayer for Openess Over Orneriness - \“In all Our Ordinary Occurrences. May we have an Open Attitude and Outer Expression to Regard Others as More Important than Ourselves.\” " },
 ];
+
+// ── BOOKS ─────────────────────────────────────────────────────
+const books = [
+  { id: "ornery-ox",     title: "The Ornery Ox Learns to Be Open",               subtitle: "Written by Ant Peer", folder: "ornery-ox/",    totalPages: 18, status: "available",   illustrator: "Paul John Federico" },
+  { id: "panic-pat",     title: "Panic Pat Practices Peace Over Panic",           subtitle: "Written by Ant Peer", folder: "panic-pat/",    totalPages: 18, status: "coming-soon", illustrator: "Polina Bakalina"    },
+  { id: "rob-rage",      title: "Rob Rage Learns Restraint",                      subtitle: "Written by Ant Peer", folder: "rob-rage/",     totalPages: 18, status: "coming-soon", illustrator: "Paul John Federico" },
+  { id: "yucky-yarvin",  title: "Yucky Yarvins Yearning for Youthfulness",        subtitle: "Written by Ant Peer", folder: "yucky-yarvin/", totalPages: 18, status: "coming-soon", illustrator: "Jacob Davenport"    },
+  { id: "violent-vicky", title: "Violent Vicky's Vision of Virtue",               subtitle: "Written by Ant Peer", folder: "violent-vicky/",totalPages: 18, status: "coming-soon", illustrator: "TBD"                },
+  { id: "boo-hoo-bob",   title: "Boo-Hoo Bob Becomes Bold",                       subtitle: "Written by Ant Peer", folder: "boo-hoo-bob/",  totalPages: 18, status: "coming-soon", illustrator: "Maria Naranjo"      },
+  { id: "goofy-goblin",  title: "Goofy Goblin Goes from Gaffes to Goodness",      subtitle: "Written by Ant Peer", folder: "goofy-goblin/", totalPages: 18, status: "coming-soon", illustrator: "TBD"                }
+];
+
+const panicPatPages    = Array.from({length: 18}, (_, i) => ({ text: "TEXT HERE PAGE " + String(i + 1).padStart(2, '0') }));
+const robRagePages     = Array.from({length: 18}, (_, i) => ({ text: "TEXT HERE PAGE " + String(i + 1).padStart(2, '0') }));
+const yuckyYarvinPages = Array.from({length: 18}, (_, i) => ({ text: "TEXT HERE PAGE " + String(i + 1).padStart(2, '0') }));
+const violentVickyPages= Array.from({length: 18}, (_, i) => ({ text: "TEXT HERE PAGE " + String(i + 1).padStart(2, '0') }));
+const booHooBobPages   = Array.from({length: 18}, (_, i) => ({ text: "TEXT HERE PAGE " + String(i + 1).padStart(2, '0') }));
+const goofyGoblinPages = Array.from({length: 18}, (_, i) => ({ text: "TEXT HERE PAGE " + String(i + 1).padStart(2, '0') }));
+
+const bookPages = {
+  "ornery-ox":     pages,
+  "panic-pat":     panicPatPages,
+  "rob-rage":      robRagePages,
+  "yucky-yarvin":  yuckyYarvinPages,
+  "violent-vicky": violentVickyPages,
+  "boo-hoo-bob":   booHooBobPages,
+  "goofy-goblin":  goofyGoblinPages
+};
+
+let activePageFiles = pageFiles;
+let activePages     = pages;
 
 // ── STATE ─────────────────────────────────────────────────────
 let current          = 0;
@@ -1164,9 +1547,10 @@ function loadPage(idx, direction) {
     const placeholder = document.getElementById('imgPlaceholder');
     img.classList.add('loading');
     placeholder.classList.remove('hidden');
-    img.src = BASE + 'page-' + pad(idx) + '.png';
+    img.src = BASE + 'page-' + activePageFiles[idx] + '.png';
 
-    document.getElementById('pageText').textContent      = pages[idx].text;
+    document.getElementById('pageText').textContent      = activePages[idx].text;
+    updatePageTextScroll();
     document.getElementById('pageBadge').textContent     = 'Page ' + (idx + 1) + ' of ' + TOTAL;
     document.getElementById('audioTitle').textContent    = 'Page ' + (idx + 1) + ' narration';
     document.getElementById('audioStatus').textContent   = 'Ready to play';
@@ -1178,7 +1562,7 @@ function loadPage(idx, direction) {
     scrubber.style.setProperty('--pct', '0%');
 
     audioEl.pause();
-    audioEl.src = BASE + 'page-' + pad(idx) + '.mp3';
+    audioEl.src = BASE + 'page-' + activePageFiles[idx] + '.mp3';
     if (autoPlayAudio) {
       audioEl.play().then(() => {
         document.getElementById('audioStatus').textContent = 'Playing...';
@@ -1277,6 +1661,37 @@ function toggleAutoPlayAudio() {
   document.getElementById('autoPlayAudioToggle').classList.toggle('on', autoPlayAudio);
 }
 
+// ── SELECTION SCREEN ──────────────────────────────────────────
+function showSelectionScreen() {
+  audioEl.pause();
+  audioEl.src = '';
+  document.getElementById('bookSelection').style.display = 'flex';
+  document.querySelector('header').style.display         = 'none';
+  document.querySelector('.reader-wrap').style.display   = 'none';
+  document.querySelector('footer').style.display         = 'none';
+  document.getElementById('coverScreen').classList.add('hidden');
+  document.getElementById('completionScreen').classList.add('hidden');
+}
+
+function openBook(bookId) {
+  const book = books.find(b => b.id === bookId);
+  if (!book || book.status !== 'available') return;
+  BASE            = 'https://raw.githubusercontent.com/antpeermakes/monsterwares-reader/main/' + book.folder;
+  TOTAL           = book.totalPages;
+  activePages     = bookPages[bookId];
+  activePageFiles = bookId === 'ornery-ox'
+    ? pageFiles
+    : Array.from({length: TOTAL}, (_, i) => String(i + 1).padStart(2, '0'));
+  document.querySelector('.book-meta h1').textContent  = book.title;
+  document.getElementById('bookSelection').style.display = 'none';
+  document.querySelector('header').style.display         = '';
+  document.querySelector('.reader-wrap').style.display   = '';
+  document.querySelector('footer').style.display         = '';
+  visited = new Set([0]);
+  renderDots();
+  loadPage(0, 1);
+}
+
 // ── DOT PROGRESS ──────────────────────────────────────────────
 function renderDots() {
   const c = document.getElementById('pageDots');
@@ -1298,10 +1713,23 @@ document.addEventListener('keydown', e => {
   if (e.key === 'f' || e.key === 'F') toggleFullscreen();
 });
 
+// ── PAGE TEXT SCROLL ──────────────────────────────────────────
+function updatePageTextScroll() {
+  const wrap = document.querySelector('.page-text');
+  wrap.scrollTop = 0;
+  const scrollable = wrap.scrollHeight > wrap.clientHeight;
+  wrap.classList.toggle('is-scrollable', scrollable);
+  wrap.classList.remove('at-bottom');
+}
+
+document.querySelector('.page-text').addEventListener('scroll', function () {
+  const atBottom = this.scrollTop + this.clientHeight >= this.scrollHeight - 4;
+  this.classList.toggle('at-bottom', atBottom);
+});
+
 // ── INIT ──────────────────────────────────────────────────────
 volSlider.style.setProperty('--pct', '90%');
-renderDots();
-loadPage(0, 1);
+showSelectionScreen();
 </script>
 </body>
 </html>
