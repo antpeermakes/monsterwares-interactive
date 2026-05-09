@@ -1157,7 +1157,7 @@
   <div class="featured-book">
     <span class="badge-available">Available Now</span>
     <img class="featured-cover"
-         src="https://raw.githubusercontent.com/antpeermakes/monsterwares-reader/main/ornery-ox/page-01.png"
+         src="ornery-ox/page-01.png"
          alt="The Ornery Ox Learns to Be Open"
          onclick="openBook('ornery-ox')">
     <div class="featured-title">The Ornery Ox Learns to Be Open</div>
@@ -1303,7 +1303,7 @@
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-let BASE  = 'https://raw.githubusercontent.com/antpeermakes/monsterwares-reader/main/';
+let BASE  = '';
 let TOTAL = 18;
 const pageFiles = ['01','03','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','22'];
 
@@ -1621,7 +1621,7 @@ function renderBookGrid() {
   grid.innerHTML = '';
   otherBooks.forEach(book => {
     const available = book.status === 'available';
-    const coverUrl  = 'https://raw.githubusercontent.com/antpeermakes/monsterwares-reader/main/' + book.folder + 'page-01.png';
+    const coverUrl  = book.folder + 'page-01.png';
     const card = document.createElement('div');
     card.className = 'book-card ' + (available ? 'available' : 'coming-soon');
     if (available) card.onclick = () => openBook(book.id);
@@ -1653,7 +1653,7 @@ function showSelectionScreen() {
 function openBook(bookId) {
   const book = books.find(b => b.id === bookId);
   if (!book || book.status !== 'available') return;
-  BASE            = 'https://raw.githubusercontent.com/antpeermakes/monsterwares-reader/main/' + book.folder;
+  BASE            = book.folder;
   TOTAL           = book.totalPages;
   activePages     = bookPages[bookId];
   activePageFiles = bookId === 'ornery-ox'
