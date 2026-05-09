@@ -464,7 +464,7 @@
   /* ── PAGE DISPLAY ────────────────────────────────────────── */
   .page-container {
     width: 100%;
-    max-width: 600px;
+    max-width: 780px;
     background: white;
     border-radius: 18px;
     box-shadow: var(--page-shadow);
@@ -598,10 +598,10 @@
     border-radius: 16px;
     box-shadow: var(--page-shadow);
     border: 1.5px solid rgba(44,26,14,0.08);
-    padding: 16px 20px;
+    padding: 10px 16px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
   }
 
   .audio-row {
@@ -611,8 +611,8 @@
   }
 
   .play-btn {
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background: var(--green);
     border: none;
@@ -696,9 +696,9 @@
 
   .toggles-group {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-    align-items: flex-end;
+    flex-direction: row;
+    gap: 14px;
+    align-items: center;
   }
 
   .autoplay-toggle {
@@ -739,37 +739,6 @@
 
   .toggle-pill.on::after { transform: translateX(14px); }
 
-  /* ── PROGRESS ────────────────────────────────────────────── */
-  .progress-strip {
-    width: 100%;
-    max-width: 600px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .progress-track {
-    flex: 1;
-    height: 6px;
-    background: rgba(44,26,14,0.1);
-    border-radius: 3px;
-    overflow: hidden;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: var(--amber);
-    border-radius: 3px;
-    transition: width 0.3s ease;
-  }
-
-  .progress-label {
-    font-size: 12px;
-    color: var(--ink-light);
-    font-weight: 700;
-    white-space: nowrap;
-  }
-
   /* ── BOTTOM NAV ──────────────────────────────────────────── */
   .bottom-nav {
     width: 100%;
@@ -803,23 +772,30 @@
 
   .page-dots {
     display: flex;
-    gap: 6px;
+    gap: 4px;
     flex-wrap: wrap;
     justify-content: center;
-    max-width: 260px;
+    max-width: 340px;
   }
 
   .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(44,26,14,0.15);
+    min-width: 22px;
+    height: 22px;
+    border-radius: 5px;
+    background: rgba(44,26,14,0.12);
+    color: var(--ink-light);
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
+    transition: background 0.2s, transform 0.2s, color 0.2s;
+    padding: 0 3px;
   }
 
-  .dot.active  { background: var(--amber); transform: scale(1.35); }
-  .dot.visited { background: var(--teal-mid); }
+  .dot.active  { background: var(--amber); color: white; transform: scale(1.2); }
+  .dot.visited { background: var(--teal-mid); color: white; }
 
   /* ── FOOTER ──────────────────────────────────────────────── */
   footer {
@@ -1025,9 +1001,9 @@
     transition: transform 0.2s, opacity 0.2s;
   }
 
-  .book-card.available  { cursor: pointer; }
+  .book-card.available  { cursor: pointer; opacity: 1; }
   .book-card.available:hover { transform: scale(1.04); }
-  .book-card.available { opacity: 0.6; cursor: not-allowed; }
+  .book-card.coming-soon { opacity: 0.4; cursor: not-allowed; }
 
   .book-card-cover {
     width: 100%;
@@ -1274,13 +1250,6 @@
     </div>
   </div>
 
-  <div class="progress-strip">
-    <div class="progress-track">
-      <div class="progress-fill" id="progressFill" style="width:4.5%"></div>
-    </div>
-    <span class="progress-label" id="progressLabel">1 / 22</span>
-  </div>
-
   <div class="bottom-nav">
     <button class="nav-btn" id="prevNavBtn" onclick="changePage(-1)" disabled>
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1505,8 +1474,6 @@ function loadPage(idx, direction) {
     document.getElementById('audioTitle').textContent    = 'Page ' + (idx + 1) + ' narration';
     document.getElementById('audioStatus').textContent   = 'Ready to play';
     document.getElementById('audioTime').textContent     = '0:00 / 0:00';
-    document.getElementById('progressLabel').textContent = (idx + 1) + ' / ' + TOTAL;
-    document.getElementById('progressFill').style.width  = ((idx + 1) / TOTAL * 100).toFixed(1) + '%';
 
     scrubber.value = 0;
     scrubber.style.setProperty('--pct', '0%');
@@ -1676,6 +1643,7 @@ function renderDots() {
   for (let i = 0; i < TOTAL; i++) {
     const d = document.createElement('div');
     d.className = 'dot' + (i === current ? ' active' : visited.has(i) ? ' visited' : '');
+    d.textContent = i + 1;
     d.title = 'Page ' + (i + 1);
     d.onclick = () => { if (i !== current) { playFlipSound(); loadPage(i, i > current ? 1 : -1); } };
     c.appendChild(d);
