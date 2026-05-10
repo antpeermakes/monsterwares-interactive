@@ -388,15 +388,14 @@
     flex-shrink: 0;
   }
 
-  .logo { display: flex; align-items: center; }
-
-  .logo-img {
-    height: 38px;
-    width: auto;
-    display: block;
-    filter: invert(1);
-    mix-blend-mode: screen;
+  .logo {
+    font-family: 'Fredoka One', cursive;
+    font-size: 22px;
+    color: var(--amber);
+    letter-spacing: 0.5px;
   }
+
+  .logo span { color: var(--teal-mid); }
 
   .header-right {
     display: flex;
@@ -1154,8 +1153,7 @@
 
   <div class="selection-header">
     <div class="selection-logo">
-      <div class="mw-logo">MW</div>
-      <div class="selection-logo-title">MONSTER WARES<br>BOOK SERIES</div>
+      <img src="monster wares banner.png" alt="Monster Wares" style="height:52px; width:auto; display:block; filter:invert(1); mix-blend-mode:screen;">
     </div>
     <div class="selection-author">Written by Ant Peer</div>
   </div>
@@ -1187,9 +1185,7 @@
 
 <!-- ── HEADER ────────────────────────────────────────────────── -->
 <header>
-  <div class="logo">
-    <img src="monster wares banner.png" alt="Monster Wares" class="logo-img">
-  </div>
+  <div class="logo">Monster<span>Wares</span></div>
   <div class="header-right">
 
     <!-- Emotion toggle (scaffold — TODO: activate when face-api.js is live) -->
