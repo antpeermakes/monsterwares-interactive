@@ -388,14 +388,7 @@
     flex-shrink: 0;
   }
 
-  .logo {
-    font-family: 'Fredoka One', cursive;
-    font-size: 22px;
-    color: var(--amber);
-    letter-spacing: 0.5px;
-  }
-
-  .logo span { color: var(--teal-mid); }
+  .logo { display: flex; align-items: center; }
 
   .header-right {
     display: flex;
@@ -1153,7 +1146,7 @@
 
   <div class="selection-header">
     <div class="selection-logo">
-      <img src="monster wares banner.png" alt="Monster Wares" style="height:52px; width:auto; display:block;">
+      <img src="monster wares banner.png" alt="Monster Wares" style="height:65px; width:auto; display:block;">
     </div>
     <div class="selection-author">Written by Ant Peer</div>
   </div>
@@ -1185,7 +1178,9 @@
 
 <!-- ── HEADER ────────────────────────────────────────────────── -->
 <header>
-  <div class="logo">Monster<span>Wares</span></div>
+  <div class="logo">
+    <img src="monster wares banner.png" alt="Monster Wares" style="height:65px; width:auto; display:block;">
+  </div>
   <div class="header-right">
 
     <!-- Emotion toggle (scaffold — TODO: activate when face-api.js is live) -->
