@@ -388,14 +388,15 @@
     flex-shrink: 0;
   }
 
-  .logo {
-    font-family: 'Fredoka One', cursive;
-    font-size: 22px;
-    color: var(--amber);
-    letter-spacing: 0.5px;
-  }
+  .logo { display: flex; align-items: center; }
 
-  .logo span { color: var(--teal-mid); }
+  .logo-img {
+    height: 38px;
+    width: auto;
+    display: block;
+    filter: invert(1);
+    mix-blend-mode: screen;
+  }
 
   .header-right {
     display: flex;
@@ -1186,7 +1187,9 @@
 
 <!-- ── HEADER ────────────────────────────────────────────────── -->
 <header>
-  <div class="logo">Monster<span>Wares</span></div>
+  <div class="logo">
+    <img src="monster wares banner.png" alt="Monster Wares" class="logo-img">
+  </div>
   <div class="header-right">
 
     <!-- Emotion toggle (scaffold — TODO: activate when face-api.js is live) -->
