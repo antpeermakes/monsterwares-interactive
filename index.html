@@ -895,15 +895,27 @@
 
   .featured-book {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     margin-bottom: 40px;
+    gap: 16px;
+    width: 100%;
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .featured-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     gap: 12px;
+    flex: 1;
   }
 
   .featured-cover {
-    width: 280px;
-    max-width: 80vw;
+    width: 100%;
+    max-width: 560px;
     border-radius: 12px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.5);
     cursor: pointer;
@@ -918,13 +930,31 @@
     font-size: 22px;
     color: white;
     text-align: center;
-    max-width: 320px;
+    max-width: 480px;
   }
 
   .featured-illustrator {
     font-size: 12px;
     color: rgba(255,255,255,0.45);
   }
+
+  .featured-arrow {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    border: 1.5px solid rgba(255,255,255,0.2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: background 0.2s, transform 0.1s;
+    flex-shrink: 0;
+  }
+
+  .featured-arrow:hover  { background: rgba(255,255,255,0.25); transform: scale(1.08); }
+  .featured-arrow:active { transform: scale(0.95); }
 
   .badge-available {
     background: #1D9E75;
@@ -1129,18 +1159,23 @@
     <div class="selection-author">Written by Ant Peer</div>
   </div>
 
-  <!-- Featured: Ornery Ox -->
+  <!-- Featured book — cycled by cycleFeatured() -->
   <div class="featured-book">
-    <span class="badge-available">Available Now</span>
-    <img class="featured-cover"
-         src="ornery-ox/page-01.png"
-         alt="The Ornery Ox Learns to Be Open"
-         onclick="openBook('ornery-ox')">
-    <div class="featured-title">The Ornery Ox Learns to Be Open</div>
-    <div class="featured-illustrator">Illustrations by Paul John Federico</div>
-    <button class="read-now-btn" onclick="openBook('ornery-ox')">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><polygon points="3,2 14,8 3,14" fill="white"/></svg>
-      Read Now
+    <button class="featured-arrow" onclick="cycleFeatured(-1)">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10l6 6" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="featured-content">
+      <span class="badge-available">Available Now</span>
+      <img class="featured-cover" id="featuredCover" src="" alt="">
+      <div class="featured-title" id="featuredTitle"></div>
+      <div class="featured-illustrator" id="featuredIllustrator"></div>
+      <button class="read-now-btn" id="featuredBtn">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><polygon points="3,2 14,8 3,14" fill="white"/></svg>
+        Read Now
+      </button>
+    </div>
+    <button class="featured-arrow" onclick="cycleFeatured(1)">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7 4l6 6-6 6" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
   </div>
 
@@ -1448,6 +1483,7 @@ let autoplay         = true;
 let autoPlayAudio    = false;
 let visited          = new Set([0]);
 let emotionPanelOpen = false;
+let featuredIndex    = 0;
 
 // ── DOM ───────────────────────────────────────────────────────
 const audioEl   = document.getElementById('audioEl');
@@ -1692,6 +1728,24 @@ function toggleAutoPlayAudio() {
   document.getElementById('autoPlayAudioToggle').classList.toggle('on', autoPlayAudio);
 }
 
+// ── FEATURED BOOK CAROUSEL ────────────────────────────────────
+function updateFeatured(idx) {
+  const available = books.filter(b => b.status === 'available');
+  featuredIndex = (idx + available.length) % available.length;
+  const book = available[featuredIndex];
+  const img  = document.getElementById('featuredCover');
+  img.src     = book.folder + 'page-01.png';
+  img.alt     = book.title;
+  img.onclick = () => openBook(book.id);
+  document.getElementById('featuredTitle').textContent       = book.title;
+  document.getElementById('featuredIllustrator').textContent = 'Illustrations by ' + book.illustrator;
+  document.getElementById('featuredBtn').onclick             = () => openBook(book.id);
+}
+
+function cycleFeatured(dir) {
+  updateFeatured(featuredIndex + dir);
+}
+
 // ── SELECTION SCREEN ──────────────────────────────────────────
 function renderBookGrid() {
   const grid  = document.getElementById('bookGrid');
@@ -1721,6 +1775,7 @@ function renderBookGrid() {
 
 function showSelectionScreen() {
   renderBookGrid();
+  updateFeatured(featuredIndex);
   audioEl.pause();
   audioEl.src = '';
   document.getElementById('bookSelection').style.display = 'flex';
