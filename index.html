@@ -431,10 +431,8 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
     padding: 28px 16px 20px;
-    gap: 20px;
-    max-width: 860px;
+    max-width: 1100px;
     margin: 0 auto;
     width: 100%;
   }
@@ -1071,6 +1069,117 @@
   @media (max-width: 400px) {
     .selection-header { flex-direction: column; align-items: flex-start; }
   }
+
+  /* ── TWO-COLUMN READER LAYOUT ─────────────────────────────── */
+  .reader-columns {
+    display: flex;
+    gap: 24px;
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .reader-left {
+    flex: 0 0 60%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+  }
+
+  .reader-right {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* ── CHARACTER PANEL ─────────────────────────────────────── */
+  .char-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 16px;
+    background: white;
+    border-radius: 18px;
+    box-shadow: var(--page-shadow);
+    border: 1.5px solid rgba(44,26,14,0.08);
+    position: sticky;
+    top: 120px;
+  }
+
+  .char-img-wrap {
+    width: 100%;
+    aspect-ratio: 1/1;
+    position: relative;
+    background: #f0f0f0;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .char-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    position: absolute;
+    inset: 0;
+  }
+
+  .char-hidden { display: none !important; }
+
+  .char-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: 40px;
+    color: #bbb;
+  }
+
+  .speech-bubble {
+    width: 100%;
+    background: var(--warm);
+    border-radius: 14px;
+    padding: 14px 16px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink);
+    font-weight: 600;
+    border: 1.5px solid rgba(44,26,14,0.08);
+    max-height: 130px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #1D9E75 #FFF8F0;
+    position: relative;
+  }
+
+  .speech-bubble::before {
+    content: '';
+    position: absolute;
+    top: -9px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 9px solid rgba(44,26,14,0.12);
+  }
+
+  .speech-bubble::after {
+    content: '';
+    position: absolute;
+    top: -7px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid var(--warm);
+  }
+
+  @media (max-width: 720px) {
+    .reader-columns { flex-direction: column; }
+    .reader-left, .reader-right { flex: none; width: 100%; }
+    .char-panel { position: static; }
+  }
 </style>
 </head>
 <body>
@@ -1215,6 +1324,8 @@
 
 <!-- ── MAIN READER ────────────────────────────────────────────── -->
 <div class="reader-wrap">
+  <div class="reader-columns">
+    <div class="reader-left">
 
   <div class="book-meta">
     <h1>Ornery Ox Learns to Be Open</h1>
@@ -1235,7 +1346,7 @@
           <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="6" y="10" width="36" height="28" rx="4" stroke="#6B4226" stroke-width="2"/><circle cx="17" cy="20" r="4" stroke="#6B4226" stroke-width="2"/><path d="M6 32l10-8 8 6 6-4 12 8" stroke="#6B4226" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           <span>Loading image...</span>
         </div>
-        <img id="pageImg" src="" alt="Book page illustration" class="loading"
+        <img id="pageImg" alt="Book page illustration" class="loading"
              onload="imgLoaded()" onerror="imgError()">
       </div>
       <div class="page-text">
@@ -1291,6 +1402,20 @@
     </button>
   </div>
 
+    </div><!-- /reader-left -->
+
+    <div class="reader-right">
+      <div class="char-panel">
+        <div class="char-img-wrap">
+          <div class="char-placeholder" id="charPlaceholder">MW</div>
+          <img id="charImgClosed" class="char-img" alt="Character" onload="charImgLoaded()" onerror="charImgError()">
+          <img id="charImgOpen" class="char-img char-hidden" alt="">
+        </div>
+        <div class="speech-bubble" id="speechBubble"></div>
+      </div>
+    </div><!-- /reader-right -->
+
+  </div><!-- /reader-columns -->
 </div>
 
 <footer>
@@ -1328,13 +1453,13 @@ const pages = [
 
 // ── BOOKS ─────────────────────────────────────────────────────
 const books = [
-  { id: "ornery-ox",     title: "The Ornery Ox Learns to Be Open",               subtitle: "Written by Ant Peer", folder: "ornery-ox/",    totalPages: 18, status: "available",   illustrator: "Paul John Federico" },
-  { id: "panic-pat",     title: "Panic Pat Practices Peace Over Panic",           subtitle: "Written by Ant Peer", folder: "panic-pat/",    totalPages: 18, status: "available", illustrator: "Polina Bakalina"    },
-  { id: "rob-rage",      title: "Rob Rage Learns Restraint",                      subtitle: "Written by Ant Peer", folder: "rob-rage/",     totalPages: 18, status: "available", illustrator: "Paul John Federico" },
-  { id: "yucky-yarvin",  title: "Yucky Yarvins Yearning for Youthfulness",        subtitle: "Written by Ant Peer", folder: "yucky-yarvin/", totalPages: 18, status: "available", illustrator: "Jacob Davenport"    },
-  { id: "violent-vicky", title: "Violent Vicky's Vision of Virtue",               subtitle: "Written by Ant Peer", folder: "violent-vicky/",totalPages: 18, status: "available", illustrator: "TBD"                },
-  { id: "boo-hoo-bob",   title: "Boo-Hoo Bob Becomes Bold",                       subtitle: "Written by Ant Peer", folder: "boo-hoo-bob/",  totalPages: 18, status: "available", illustrator: "Maria Naranjo"      },
-  { id: "goofy-goblin",  title: "Goofy Goblin Goes from Gaffes to Goodness",      subtitle: "Written by Ant Peer", folder: "goofy-goblin/", totalPages: 18, status: "available", illustrator: "TBD"                }
+  { id: "ornery-ox",     characterId: "ornery-ox",     title: "The Ornery Ox Learns to Be Open",               subtitle: "Written by Ant Peer", folder: "ornery-ox/",    totalPages: 18, status: "available",   illustrator: "Paul John Federico" },
+  { id: "panic-pat",     characterId: "panic-pat",     title: "Panic Pat Practices Peace Over Panic",           subtitle: "Written by Ant Peer", folder: "panic-pat/",    totalPages: 18, status: "available", illustrator: "Polina Bakalina"    },
+  { id: "rob-rage",      characterId: "rob-rage",      title: "Rob Rage Learns Restraint",                      subtitle: "Written by Ant Peer", folder: "rob-rage/",     totalPages: 18, status: "available", illustrator: "Paul John Federico" },
+  { id: "yucky-yarvin",  characterId: "yucky-yarvin",  title: "Yucky Yarvins Yearning for Youthfulness",        subtitle: "Written by Ant Peer", folder: "yucky-yarvin/", totalPages: 18, status: "available", illustrator: "Jacob Davenport"    },
+  { id: "violent-vicky", characterId: "violent-vicky", title: "Violent Vicky's Vision of Virtue",               subtitle: "Written by Ant Peer", folder: "violent-vicky/",totalPages: 18, status: "available", illustrator: "TBD"                },
+  { id: "boo-hoo-bob",   characterId: "boo-hoo-bob",   title: "Boo-Hoo Bob Becomes Bold",                       subtitle: "Written by Ant Peer", folder: "boo-hoo-bob/",  totalPages: 18, status: "available", illustrator: "Maria Naranjo"      },
+  { id: "goofy-goblin",  characterId: "goofy-goblin",  title: "Goofy Goblin Goes from Gaffes to Goodness",      subtitle: "Written by Ant Peer", folder: "goofy-goblin/", totalPages: 18, status: "available", illustrator: "TBD"                }
 ];
 
 const panicPatPages = [
@@ -1478,6 +1603,7 @@ let autoPlayAudio    = false;
 let visited          = new Set([0]);
 let emotionPanelOpen = false;
 let featuredIndex    = 0;
+let lipSyncInterval  = null;
 
 // ── DOM ───────────────────────────────────────────────────────
 const audioEl   = document.getElementById('audioEl');
@@ -1597,6 +1723,120 @@ function setPlayIcon(playing) {
     : '<polygon points="4,2 16,9 4,16" fill="white"/>';
 }
 
+// ── CHARACTER / LIP SYNC ──────────────────────────────────────
+function updateCharacter(characterId) {
+  const closed = document.getElementById('charImgClosed');
+  const open   = document.getElementById('charImgOpen');
+  const ph     = document.getElementById('charPlaceholder');
+  stopLipSync();
+  if (!characterId) { ph.style.display = ''; return; }
+  ph.style.display = 'none';
+  closed.classList.remove('char-hidden');
+  open.classList.add('char-hidden');
+  closed.src = 'characters/' + characterId + '-closed.png';
+  open.src   = 'characters/' + characterId + '-open.png';
+}
+
+function charImgLoaded() {
+  document.getElementById('charPlaceholder').style.display = 'none';
+}
+
+function charImgError() {
+  document.getElementById('charImgClosed').classList.add('char-hidden');
+  document.getElementById('charImgOpen').classList.add('char-hidden');
+  document.getElementById('charPlaceholder').style.display = '';
+}
+
+function startLipSync() {
+  stopLipSync();
+
+  const closed = document.getElementById('charImgClosed');
+  const open   = document.getElementById('charImgOpen');
+
+  // Use a separate hidden audio element for analysis ONLY.
+  // The main audioEl is never touched by createMediaElementSource, so it
+  // always plays through the native pipeline regardless of Web Audio state.
+  // file:// protocol: Chrome treats each local file as a unique origin, so
+  // Web Audio can't read the audio data (CORS). Use the 150ms fallback locally;
+  // real decibel sync kicks in automatically when served over HTTP.
+  if (window.location.protocol === 'file:') {
+    let isOpen = false;
+    lipSyncInterval = setInterval(() => {
+      isOpen = !isOpen;
+      closed.classList.toggle('char-hidden', isOpen);
+      open.classList.toggle('char-hidden', !isOpen);
+    }, 150);
+    return;
+  }
+
+  if (!window.lipSyncAudioEl) {
+    window.lipSyncAudioEl = new Audio();
+  }
+
+  try {
+    const ctx = getAudioCtx();
+
+    if (!window.lipSyncSource) {
+      // Muted gain node — audio must reach ctx.destination for processing to occur,
+      // but gain=0 means nothing comes out of the speakers from the analysis stream.
+      const muted = ctx.createGain();
+      muted.gain.value = 0;
+      window.lipSyncSource   = ctx.createMediaElementSource(window.lipSyncAudioEl);
+      window.lipSyncAnalyser = ctx.createAnalyser();
+      window.lipSyncSource.connect(window.lipSyncAnalyser);
+      window.lipSyncAnalyser.connect(muted);
+      muted.connect(ctx.destination);
+    }
+
+    // Sync analysis audio to the current page and position
+    window.lipSyncAudioEl.src         = audioEl.src;
+    window.lipSyncAudioEl.currentTime = audioEl.currentTime;
+    window.lipSyncAudioEl.play().catch(() => {});
+
+    ctx.resume().then(() => {
+      if (audioEl.paused) { window.lipSyncAudioEl.pause(); return; }
+
+      const analyser  = window.lipSyncAnalyser;
+      analyser.fftSize = 256;
+      const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+      // THRESHOLD: mouth opens above this volume level (0–255).
+      // Lower = more sensitive. Raise to 45 if mouth stays open constantly;
+      // lower to 15 if mouth never opens.
+      const THRESHOLD = 30;
+
+      lipSyncInterval = setInterval(() => {
+        analyser.getByteFrequencyData(dataArray);
+        let sum = 0;
+        const bins = Math.floor(dataArray.length / 2);
+        for (let i = 0; i < bins; i++) sum += dataArray[i];
+        const volume = sum / bins;
+        const mouthOpen = volume > THRESHOLD;
+        closed.classList.toggle('char-hidden', mouthOpen);
+        open.classList.toggle('char-hidden', !mouthOpen);
+      }, 1000 / 30);
+    });
+
+  } catch (e) {
+    // Fallback: simple 150ms toggle if Web Audio setup fails (e.g. CORS locally)
+    let isOpen = false;
+    lipSyncInterval = setInterval(() => {
+      isOpen = !isOpen;
+      closed.classList.toggle('char-hidden', isOpen);
+      open.classList.toggle('char-hidden', !isOpen);
+    }, 150);
+  }
+}
+
+function stopLipSync() {
+  if (lipSyncInterval) { clearInterval(lipSyncInterval); lipSyncInterval = null; }
+  if (window.lipSyncAudioEl) window.lipSyncAudioEl.pause();
+  const closed = document.getElementById('charImgClosed');
+  const open   = document.getElementById('charImgOpen');
+  if (closed) closed.classList.remove('char-hidden');
+  if (open)   open.classList.add('char-hidden');
+}
+
 // ── PAGE NAVIGATION ───────────────────────────────────────────
 function loadPage(idx, direction) {
   const inner = document.getElementById('pageInner');
@@ -1613,6 +1853,7 @@ function loadPage(idx, direction) {
     img.src = BASE + 'page-' + activePageFiles[idx] + '.png';
 
     document.getElementById('pageText').textContent      = activePages[idx].text;
+    document.getElementById('speechBubble').textContent  = activePages[idx].text;
     updatePageTextScroll();
     document.getElementById('pageBadge').textContent     = 'Page ' + (idx + 1) + ' of ' + TOTAL;
     document.getElementById('audioTitle').textContent    = 'Page ' + (idx + 1) + ' narration';
@@ -1624,14 +1865,17 @@ function loadPage(idx, direction) {
 
     audioEl.pause();
     audioEl.src = BASE + 'page-' + activePageFiles[idx] + '.mp3';
+    if (window.lipSyncAudioEl) { window.lipSyncAudioEl.pause(); window.lipSyncAudioEl.src = audioEl.src; }
     if (autoPlayAudio) {
       audioEl.play().then(() => {
         document.getElementById('audioStatus').textContent = 'Playing...';
         setPlayIcon(true);
+        startLipSync();
       }).catch(() => audioEl.load());
     } else {
       audioEl.load();
       setPlayIcon(false);
+      stopLipSync();
     }
 
     document.getElementById('prevBtn').disabled    = idx === 0;
@@ -1674,10 +1918,12 @@ function togglePlay() {
     audioEl.play();
     document.getElementById('audioStatus').textContent = 'Playing...';
     setPlayIcon(true);
+    startLipSync();
   } else {
     audioEl.pause();
     document.getElementById('audioStatus').textContent = 'Paused';
     setPlayIcon(false);
+    stopLipSync();
   }
 }
 
@@ -1690,6 +1936,7 @@ audioEl.addEventListener('timeupdate', () => {
 
 audioEl.addEventListener('ended', () => {
   setPlayIcon(false);
+  stopLipSync();
   document.getElementById('audioStatus').textContent = 'Finished';
   if (current === TOTAL - 1) {
     setTimeout(showCompletion, 1400);
@@ -1794,6 +2041,7 @@ function openBook(bookId) {
   document.querySelector('header').style.display         = '';
   document.querySelector('.reader-wrap').style.display   = '';
   document.querySelector('footer').style.display         = '';
+  updateCharacter(book.characterId);
   visited = new Set([0]);
   renderDots();
   loadPage(0, 1);
