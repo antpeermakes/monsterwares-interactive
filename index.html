@@ -1452,14 +1452,18 @@ const pages = [
 ];
 
 // ── BOOKS ─────────────────────────────────────────────────────
+// All page images and audio live in the reader repo.
+// Ornery Ox is at the reader root; all other books are in subfolders.
+const READER_BASE = 'https://antpeermakes.github.io/monsterwares-reader/';
+
 const books = [
-  { id: "ornery-ox",     characterId: "ornery-ox",     title: "The Ornery Ox Learns to Be Open",               subtitle: "Written by Ant Peer", folder: "ornery-ox/",    totalPages: 18, status: "available",   illustrator: "Paul John Federico" },
-  { id: "panic-pat",     characterId: "panic-pat",     title: "Panic Pat Practices Peace Over Panic",           subtitle: "Written by Ant Peer", folder: "panic-pat/",    totalPages: 18, status: "available", illustrator: "Polina Bakalina"    },
-  { id: "rob-rage",      characterId: "rob-rage",      title: "Rob Rage Learns Restraint",                      subtitle: "Written by Ant Peer", folder: "rob-rage/",     totalPages: 18, status: "available", illustrator: "Paul John Federico" },
-  { id: "yucky-yarvin",  characterId: "yucky-yarvin",  title: "Yucky Yarvins Yearning for Youthfulness",        subtitle: "Written by Ant Peer", folder: "yucky-yarvin/", totalPages: 18, status: "available", illustrator: "Jacob Davenport"    },
-  { id: "violent-vicky", characterId: "violent-vicky", title: "Violent Vicky's Vision of Virtue",               subtitle: "Written by Ant Peer", folder: "violent-vicky/",totalPages: 18, status: "available", illustrator: "TBD"                },
-  { id: "boo-hoo-bob",   characterId: "boo-hoo-bob",   title: "Boo-Hoo Bob Becomes Bold",                       subtitle: "Written by Ant Peer", folder: "boo-hoo-bob/",  totalPages: 18, status: "available", illustrator: "Maria Naranjo"      },
-  { id: "goofy-goblin",  characterId: "goofy-goblin",  title: "Goofy Goblin Goes from Gaffes to Goodness",      subtitle: "Written by Ant Peer", folder: "goofy-goblin/", totalPages: 18, status: "available", illustrator: "TBD"                }
+  { id: "ornery-ox",     characterId: "ornery-ox",     title: "The Ornery Ox Learns to Be Open",               subtitle: "Written by Ant Peer", folder: READER_BASE,                       totalPages: 18, status: "available",   illustrator: "Paul John Federico" },
+  { id: "panic-pat",     characterId: "panic-pat",     title: "Panic Pat Practices Peace Over Panic",           subtitle: "Written by Ant Peer", folder: READER_BASE + "panic-pat/",        totalPages: 18, status: "available", illustrator: "Polina Bakalina"    },
+  { id: "rob-rage",      characterId: "rob-rage",      title: "Rob Rage Learns Restraint",                      subtitle: "Written by Ant Peer", folder: READER_BASE + "rob-rage/",         totalPages: 18, status: "available", illustrator: "Paul John Federico" },
+  { id: "yucky-yarvin",  characterId: "yucky-yarvin",  title: "Yucky Yarvins Yearning for Youthfulness",        subtitle: "Written by Ant Peer", folder: READER_BASE + "yucky-yarvin/",     totalPages: 18, status: "available", illustrator: "Jacob Davenport"    },
+  { id: "violent-vicky", characterId: "violent-vicky", title: "Violent Vicky's Vision of Virtue",               subtitle: "Written by Ant Peer", folder: READER_BASE + "violent-vicky/",    totalPages: 18, status: "available", illustrator: "TBD"                },
+  { id: "boo-hoo-bob",   characterId: "boo-hoo-bob",   title: "Boo-Hoo Bob Becomes Bold",                       subtitle: "Written by Ant Peer", folder: READER_BASE + "boo-hoo-bob/",      totalPages: 18, status: "available", illustrator: "Maria Naranjo"      },
+  { id: "goofy-goblin",  characterId: "goofy-goblin",  title: "Goofy Goblin Goes from Gaffes to Goodness",      subtitle: "Written by Ant Peer", folder: READER_BASE + "goofy-goblin/",     totalPages: 18, status: "available", illustrator: "TBD"                }
 ];
 
 const panicPatPages = [
