@@ -1800,25 +1800,61 @@ function startLipSync() {
     ctx.resume().then(() => {
       if (audioEl.paused) { window.lipSyncAudioEl.pause(); return; }
 
-      const analyser  = window.lipSyncAnalyser;
-      analyser.fftSize = 256;
+      const analyser = window.lipSyncAnalyser;
+      analyser.fftSize = 64; // Small FFT = fast transient response
+
       const dataArray = new Uint8Array(analyser.frequencyBinCount);
 
-      // THRESHOLD: mouth opens above this volume level (0–255).
-      // Lower = more sensitive. Raise to 45 if mouth stays open constantly;
-      // lower to 15 if mouth never opens.
-      const THRESHOLD = 30;
+      /*
+        LIP SYNC TUNING GUIDE:
+        OPEN_THRESHOLD  — raise if mouth opens on silence/noise (try 35-50)
+                          lower if mouth never opens (try 10-20)
+        CLOSE_THRESHOLD — raise if mouth doesn't close between words (try 15-25)
+                          lower if mouth flickers on consonants (try 5-8)
+        CLOSE_DELAY_MS  — raise for slower/smoother jaw (try 100-150)
+                          lower for snappier closes between words (try 40-60)
+      */
+      const OPEN_THRESHOLD  = 25;
+      const CLOSE_THRESHOLD = 10;
+      const CLOSE_DELAY_MS  = 75;
 
+      let mouthIsOpen  = false;
+      let closeTimeout = null;
+
+      // Poll 60x per second — fast enough to catch gaps between words
       lipSyncInterval = setInterval(() => {
         analyser.getByteFrequencyData(dataArray);
-        let sum = 0;
-        const bins = Math.floor(dataArray.length / 2);
-        for (let i = 0; i < bins; i++) sum += dataArray[i];
-        const volume = sum / bins;
-        const mouthOpen = volume > THRESHOLD;
-        closed.classList.toggle('char-hidden', mouthOpen);
-        open.classList.toggle('char-hidden', !mouthOpen);
-      }, 1000 / 30);
+
+        // Read PEAK from speech frequency bins only (not average)
+        // Bins 1-10 of a 64-point FFT at 44100hz = human speech range
+        let peak = 0;
+        for (let i = 1; i <= 10; i++) {
+          if (dataArray[i] > peak) peak = dataArray[i];
+        }
+
+        if (peak > OPEN_THRESHOLD) {
+          // LOUD — open mouth immediately, cancel any pending close
+          if (closeTimeout) {
+            clearTimeout(closeTimeout);
+            closeTimeout = null;
+          }
+          if (!mouthIsOpen) {
+            mouthIsOpen = true;
+            closed.classList.add('char-hidden');
+            open.classList.remove('char-hidden');
+          }
+
+        } else if (peak < CLOSE_THRESHOLD && mouthIsOpen && !closeTimeout) {
+          // QUIET — close mouth after short natural delay
+          closeTimeout = setTimeout(() => {
+            mouthIsOpen  = false;
+            closeTimeout = null;
+            closed.classList.remove('char-hidden');
+            open.classList.add('char-hidden');
+          }, CLOSE_DELAY_MS);
+        }
+
+      }, 1000 / 60);
     });
 
   } catch (e) {
@@ -1833,7 +1869,14 @@ function startLipSync() {
 }
 
 function stopLipSync() {
-  if (lipSyncInterval) { clearInterval(lipSyncInterval); lipSyncInterval = null; }
+  if (lipSyncInterval) {
+    clearInterval(lipSyncInterval);
+    lipSyncInterval = null;
+  }
+  if (window.lipSyncCloseTimeout) {
+    clearTimeout(window.lipSyncCloseTimeout);
+    window.lipSyncCloseTimeout = null;
+  }
   if (window.lipSyncAudioEl) window.lipSyncAudioEl.pause();
   const closed = document.getElementById('charImgClosed');
   const open   = document.getElementById('charImgOpen');
